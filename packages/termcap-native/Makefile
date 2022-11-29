@@ -25,3 +25,5 @@ ${DIST_NATIVE}/.built: ${BUILD_NATIVE}/.build
 		make install
 	touch ${DIST_NATIVE}/.built
 
+test:
+	echo "no test"
