@@ -11,7 +11,7 @@ include ../build/Makefile-rules
 
 # See https://www.thrysoee.dk/editline/
 
-TERMCAP_NATIVE = ${PACKAGES}/termcap/dist/native
+TERMCAP_NATIVE = ${PACKAGES}/termcap-native/dist/native
 
 ##################
 # NATIVE

@@ -17,9 +17,8 @@ PYTHON_VERSION = ${PYTHON_MAJOR}.${PYTHON_MINOR}.${PYTHON_PATCH}
 URL = https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}${PYTHON_BETA}.tar.xz
 TARBALL = ${UPSTREAM}/python-${PYTHON_VERSION}${PYTHON_BETA}.tar.xz
 
-ZLIB_NATIVE = ${PACKAGES}/zlib/dist/native
-
-LIBEDIT_NATIVE = ${PACKAGES}/libedit/dist/native
+ZLIB_NATIVE = ${PACKAGES}/zlib-native/dist/native
+LIBEDIT_NATIVE = ${PACKAGES}/libedit-native/dist/native
 
 POSIX_WASM = $(shell cowasm-package-path @cowasm/posix-wasm)
 LIBEDIT_WASM = $(shell cowasm-package-path @cowasm/libedit)
@@ -30,10 +29,6 @@ OPENSSL_WASM = $(shell cowasm-package-path @cowasm/openssl)
 SQLITE_WASM = $(shell cowasm-package-path @cowasm/sqlite)
 BZIP2_WASM = $(shell cowasm-package-path @cowasm/bzip2)
 ZLIB_WASM = $(shell cowasm-package-path @cowasm/zlib)
-
-# NCURSES = ${PACKAGES}/ncurses/dist
-# NCURSES_INCLUDE = -I${NCURSES}/wasm/include/ncurses -I${NCURSES}/wasm/include
-# NCURSES_LIB = -L${NCURSES}/wasm/lib
 
 PYTHON_WASM = ${BIN}/python-wasm
 
