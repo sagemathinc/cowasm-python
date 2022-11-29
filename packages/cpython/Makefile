@@ -378,9 +378,11 @@ test-pip: pip
 .PHONY: test-pip
 
 
+# Some tests can be pretty slow, e.g., test_tarfile takes about a minute or more on a FAST computer, 
+# and doing 4 in parallel on a slow computer.
 test: wasm native ${BIN}/python-wasm test-pip
 	echo "Running ${SUPPORTED_TEST_DESC}"
-	cd ${BUILD_WASM} && PATH=${TEST_PATH} ${RUN_TESTS}  -j4 --timeout=240 ${SUPPORTED_TESTS}
+	cd ${BUILD_WASM} && PATH=${TEST_PATH} ${RUN_TESTS}  -j4 --timeout=600 ${SUPPORTED_TESTS}
 	echo "Ran ${SUPPORTED_TEST_DESC}"
 .PHONY: test
 
