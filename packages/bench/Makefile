@@ -1,9 +1,8 @@
 include ../build/Makefile-vars
 
 python-wasm:
-	cd ../cpython && make wasm
 	echo "Starting benchmarks with python-wasm"
-	${BIN}/python-wasm src/all.py
+	npx --yes python-wasm@latest src/all.py
 
 native:
 	cd ../cpython && make native
