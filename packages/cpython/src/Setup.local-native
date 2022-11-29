@@ -8,8 +8,8 @@
 
 *static*
 
-_lzma _lzmamodule.c -I$(abs_srcdir)/../../../lzma/dist/native/include/ $(abs_srcdir)/../../../lzma/dist/native/lib/liblzma.a $(abs_srcdir)/../../../termcap/dist/native/lib/libtermcap.a
-readline readline.c -I$(abs_srcdir)/../../../libedit/dist/native/include/ $(abs_srcdir)/../../../libedit/dist/native/lib/libedit.a $(abs_srcdir)/../../../termcap/dist/native/lib/libtermcap.a
+_lzma _lzmamodule.c -I$(abs_srcdir)/../../../lzma-native/dist/native/include/ $(abs_srcdir)/../../../lzma-native/dist/native/lib/liblzma.a $(abs_srcdir)/../../../termcap-native/dist/native/lib/libtermcap.a
+readline readline.c -I$(abs_srcdir)/../../../libedit-native/dist/native/include/ $(abs_srcdir)/../../../libedit-native/dist/native/lib/libedit.a $(abs_srcdir)/../../../termcap-native/dist/native/lib/libtermcap.a
 _struct _struct.c
 binascii binascii.c
 zlib  zlibmodule.c -lz
@@ -77,7 +77,7 @@ termios termios.c
 # OpenSSL bindings.  Just statically link them for simplicity since we will never distribution our python-native.
 # This is not *used*, but is likely going to be useful for development since we can see precisely how python-native
 # does something, to make implementing it in python-wasm easier.
-# _ssl _ssl.c -DOPENSSL_THREADS -I$(abs_srcdir)/../../../openssl/dist/native/include $(abs_srcdir)/../../../openssl/dist/native/lib/libssl.a $(abs_srcdir)/../../../openssl/dist/native/lib/libcrypto.a
-# _hashlib _hashopenssl.c -DOPENSSL_THREADS -I$(abs_srcdir)/../../../openssl/dist/native/include $(abs_srcdir)/../../../openssl/dist/native/lib/libcrypto.a
+# _ssl _ssl.c -DOPENSSL_THREADS -I$(abs_srcdir)/../../../openssl-native/dist/native/include $(abs_srcdir)/../../../openssl-native/dist/native/lib/libssl.a $(abs_srcdir)/../../../openssl-native/dist/native/lib/libcrypto.a
+# _hashlib _hashopenssl.c -DOPENSSL_THREADS -I$(abs_srcdir)/../../../openssl-native/dist/native/include $(abs_srcdir)/../../../openssl-native/dist/native/lib/libcrypto.a
 
 

@@ -20,14 +20,12 @@
     "prepublishOnly": "make clean-wasm && make wasm && make pip && make test && rm -rf dist/wasm/lib/python*/test/",
     "test": "make test"
   },
+  "bin": "bin/python-wasm",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/sagemathinc/cowasm.git"
   },
-  "keywords": [
-    "WebAssembly",
-    "wasm"
-  ],
+  "keywords": ["WebAssembly", "wasm"],
   "author": "William Stein <wstein@sagemath.com>",
   "license": "BSD-3-Clause",
   "bugs": {

@@ -2,7 +2,6 @@ include ../build/Makefile-vars
 
 python-wasm:
 	cd ../cpython && make wasm
-	cd ../kernel && make
 	echo "Starting benchmarks with python-wasm"
 	${BIN}/python-wasm src/all.py
 

@@ -76,10 +76,10 @@ ${BUILD_NATIVE}/.build:: ${TARBALL}
 
 ${DIST_NATIVE}/.built: ${BUILD_NATIVE}/.build
 	cd ../zig && make
-	cd ../lzma && make native
-	cd ../zlib && make native
-	cd ../termcap && make native
-	cd ../libedit && make native
+	cd ../lzma-native && make
+	cd ../zlib-native && make
+	cd ../termcap-native && make
+	cd ../libedit-native && make
 	cd ${BUILD_NATIVE} \
 		&& 	AR="zig ar" \
 			CXX="zig c++ ${ZIG_NATIVE_CFLAGS}" \
@@ -325,7 +325,6 @@ python-wasm: wasm ${BIN}/python-wasm
 # NOTE: If you do "make clean-wasm", then "make", be sure to also do "make pip".
 ###########
 ${DIST_WASM}/lib/python3.11/site-packages/setuptools/.built: ${DIST_WASM}/.built
-	cd ../kernel && make # TODO: so cowasm command is available, which is needed for python-wasm
 	rm -rf ${DIST_WASM}/lib/python*/site-packages/*pip* ${DIST_WASM}/lib/python*/site-packages/*setuptools*
 	${CWD}/bin/python-wasm -m ensurepip
 	# We apply one patch to support building C++ extensions.  Without this, the numpy
