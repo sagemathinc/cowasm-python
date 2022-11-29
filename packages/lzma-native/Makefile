@@ -24,5 +24,5 @@ ${DIST_NATIVE}/.built: ${BUILD_NATIVE}/.build
 	cd ${BUILD_NATIVE} && make -j4 && make install
 	touch ${DIST_NATIVE}/.built
 
-test:
+test: ${DIST_NATIVE}/.built
 	echo "no test"
