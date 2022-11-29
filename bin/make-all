@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -ev
+
+TARGET=$1
+shift
+ROOTDIR=`pwd`
+
+for PACKAGE in $*
+do
+    cd "$ROOTDIR/$PACKAGE"
+    echo $PACKAGE
+    make $TARGET
+done
