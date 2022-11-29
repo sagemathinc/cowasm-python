@@ -28,13 +28,13 @@ ${DIST_NATIVE}/.${VERSION}: ${TARBALL}
 	tar xf ${TARBALL} -C ${DIST_NATIVE} --strip-components=1
 	touch ${DIST_NATIVE}/.${VERSION}
 
-${BIN}/node:
+${BIN}/node: ${DIST_NATIVE}/.${VERSION}
 	ln -sf ${DIST_NATIVE}/bin/node ${BIN}/node
 
-${BIN}/npm:
+${BIN}/npm: ${DIST_NATIVE}/.${VERSION}
 	ln -sf ${DIST_NATIVE}/bin/npm ${BIN}/npm
 
-${BIN}/npx:
+${BIN}/npx: ${DIST_NATIVE}/.${VERSION}
 	ln -sf ${DIST_NATIVE}/bin/npx ${BIN}/npx
 
 test: ${BIN}/node
