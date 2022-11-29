@@ -1,3 +1,7 @@
+// This breaks randomly, due to probably threading issues, since this is the error:
+//    "ENOENT: no such file or directory, uv_cwd"
+// Hence we have to skip it for now.
+
 import { asyncPython } from "../../node";
 
 const CREATE_SERVER =
@@ -6,7 +10,7 @@ const CREATE_SERVER =
 // See also packages/python-wasm/data/socket for some python scripts
 // you can run directly.
 
-test("create a client and a server and have them send/recv strings", async () => {
+test.skip("create a client and a server and have them send/recv strings", async () => {
   // It is really cool how easily we can do this test due to the
   // architecture of python-wasm!
   // We just run two completely separate copies of Python
@@ -47,7 +51,8 @@ conn.close()
 
 // socket.settimeout is very commonly used on sockets and uses fd_fdstat_set_flags in WASI
 // so we better test that it doesn't crash.
-test("settimeout on a socket", async () => {
+
+test.skip("settimeout on a socket", async () => {
   const client = await asyncPython();
   const server = await asyncPython();
   await server.exec(CREATE_SERVER);
