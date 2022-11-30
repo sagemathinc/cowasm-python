@@ -4,8 +4,7 @@ all: ${DIST}/.built
 
 include ../build/Makefile-rules
 
-${DIST}/.built: src/index.ts
-	npm ci
+${DIST}/.built: node_modules src/index.ts
 	npm run build
 	touch ${DIST}/.built
 
