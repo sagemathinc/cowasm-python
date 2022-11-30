@@ -48,12 +48,6 @@ PYTHON_WASM = ${BIN}/python-wasm
 WASM_OPT=-DNDEBUG -fwrapv -Wall -Oz -g
 #WASM_OPT=-DNDEBUG -fwrapv -Wall -Oz
 
-
-# We only use zlib (not lzma) for native build, since liblzma is widely available natively.
-export DYLD_LIBRARY_PATH := ${DIST_NATIVE}/lib:${ZLIB_NATIVE}/lib
-export LD_LIBRARY_PATH := ${DIST_NATIVE}/lib:${ZLIB_NATIVE}/lib
-export PATH := ${DIST_NATIVE}/bin:${PATH}
-
 # Default target
 all: native ${BIN}/python-native wasm ${BIN}/python-wasm
 
@@ -103,12 +97,18 @@ ${DIST_NATIVE}/.built: ${BUILD_NATIVE}/.build
 
 ${BIN}/python-native: bin/python-native
 	rm -f ${BIN}/python-native
-	ln -s `pwd`/bin/python-native ${BIN}/python-native
+	ln -s ${CWD}/bin/python-native ${BIN}/python-native
+	# We also make it python3.  This is necessary since the cowasm-cc script
+	# has /usr/bin/env python so it can be used without needing python-native.
+	# However, when building python-wasm the env gets setup in such a way
+	# that trying to run any other python3 on the system will break.
+	ln -s ${CWD}/bin/python-native ${BIN}/python3
+	touch ${BIN}/python-native
 
 # Use "make run-native" to run native python at the command line.
 .PHONY: run-native
-run-native: ${DIST_NATIVE}/.built
-	bin/python-native
+run-native: ${DIST_NATIVE}/.built ${BIN}/python-native
+	${BIN}/python-native
 
 
 ## WASM
@@ -163,7 +163,7 @@ DEBUG_MODE = ""
 # DEBUG_MODE = "-g"
 BLDSHARED = cowasm-cc --experimental-pic -shared ${DEBUG_MODE}
 
-${DIST_WASM}/.built-cpython: node_modules ${BUILD_WASM}/.patched ${DIST_NATIVE}/.built
+${DIST_WASM}/.built-cpython: node_modules ${BUILD_WASM}/.patched ${DIST_NATIVE}/.built ${BIN}/python-native
 	# - Important to set CXX even though it's not in the main build so zig is used for C++ extension modules.
 	# - with-pymalloc it actually works and seems faster
 	# - We use "zig cc -target wasm32-wasi" instead of "zig cc -target wasm32-wasi-musl" since the broken
@@ -206,7 +206,7 @@ ${DIST_WASM}/.built-cpython: node_modules ${BUILD_WASM}/.patched ${DIST_NATIVE}/
 			--disable-shared \
 			--with-pkg-config=no \
 			--with-readline=editline \
-			--with-build-python=${CWD}/bin/python-native \
+			--with-build-python=${BIN}/python-native \
 			--with-pymalloc \
 			--with-ensurepip \
 			--host=wasm32-unknown-wasi \
@@ -265,7 +265,7 @@ ${DIST_WASM}/.install-data: ${DIST_WASM}/.install-cpython native ${BIN}/python-n
 	# Build wasm asset bundle (the pyc files, etc.).
 	cd ${BUILD_WASM} \
 		&& mkdir -p usr/local/lib/python3.11/lib-dynload/  \
-		&& python-native ./Tools/wasm/wasm_assets.py \
+		&& ${BIN}/python-native ./Tools/wasm/wasm_assets.py \
 		&& rm -rf ${DIST_WASM}/lib/dist \
 		&& mv usr/local/lib ${DIST_WASM}/lib/dist
 	# Add termcap for xterm to our zip asset bundle, so readline actually works:
