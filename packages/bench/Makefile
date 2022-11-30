@@ -1,7 +1,7 @@
 include ../build/Makefile-vars
 
 python-wasm:
-	cd ../node && make
+	cd ../build && make node
 	echo "Starting benchmarks with python-wasm"
 	npx --yes python-wasm@latest src/all.py
 

@@ -22,13 +22,13 @@ LDFLAGS = -L$(shell cowasm-package-path @cowasm/cpython)/lib -lpython3.11
 
 ${BUILD}/libpython.o:
 	mkdir -p ${BUILD}
-	cd ../zig && make
+	cd ../build && make zig
 	${BIN}/cowasm-cc -Oz ${CFLAGS} \
 		-c ${CPYTHON_WASM}/lib/libpython.c \
 		-o ${BUILD}/libpython.o
 
 ${DIST}/python.wasm: node_modules src/python.zig src/signal.zig ${BUILD}/libpython.o
-	cd ../zig && make
+	cd ../build && make zig
 	mkdir -p ${DIST}
 	cd src/ \
 		&& ${BIN}/cowasm-zig \
@@ -108,7 +108,7 @@ python: ${DIST}/python.wasm hello hellozig ${BUNDLES} ${PYTHON_PACKAGES}
 PLATFORM = cpython-311-wasm32-wasi
 
 ${DIST}/hello.${PLATFORM}.so: src/extension/hellomodule.c
-	cd ../zig && make
+	cd ../build && make zig
 	${BIN}/cowasm-cc -Oz ${CFLAGS} -shared  \
 		src/extension/hellomodule.c -o ${DIST}/hello.${PLATFORM}.so
 
@@ -120,7 +120,7 @@ hello: ${DIST}/hello.${PLATFORM}.so
 ###
 
 ${DIST}/hellozig.${PLATFORM}.so: src/extension/hellozigmodule.zig src/extension/hellozigmodule.c
-	cd ../zig && make
+	cd ../build && make zig
 	cd src/extension \
 		&&	${BIN}/cowasm-cc ${CFLAGS} -Oz -c hellozigmodule.c -o hellozigmodule-c.o \
 		&&	${BIN}/cowasm-zig ${CFLAGS} ${OPT} hellozigmodule-c.o hellozigmodule.zig \

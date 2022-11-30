@@ -64,7 +64,7 @@ ${BUILD_NATIVE}/.build:: ${TARBALL}
 	if [ `uname -s` == "Darwin" ]; then echo "_scproxy _scproxy.c" >> ${BUILD_NATIVE}/Modules/Setup.local; fi
 
 ${DIST_NATIVE}/.built: ${BUILD_NATIVE}/.build
-	cd ../zig && make
+	cd ../build && make zig
 	cd ../lzma-native && make
 	cd ../zlib-native && make
 	cd ../termcap-native && make

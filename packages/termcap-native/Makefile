@@ -18,7 +18,7 @@ include ../build/Makefile-rules
 ##################
 
 ${DIST_NATIVE}/.built: ${BUILD_NATIVE}/.build
-	cd ../zig && make
+	cd ../build && make zig
 	cp src/config.h ${BUILD_NATIVE}
 	cd ${BUILD_NATIVE} && \
 		CC="zig cc ${ZIG_NATIVE_CFLAGS_GNU} -DHAVE_CONFIG_H=1 " AR="zig ar" ./configure --prefix=${DIST_NATIVE} && \
