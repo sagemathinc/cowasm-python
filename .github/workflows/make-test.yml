@@ -16,4 +16,4 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - run: make test
+    - run: cd packages/cpython && make test && cd ../py-cython && make test && cd ../py-mpmath && make test
