@@ -111,7 +111,9 @@ We support and regularly test building CoWasm\-Python from source on the followi
 You do NOT need to install Zig or Node.js, and different packages have different requirements. A tested version of each will be
 downloaded as part of the build process. Currently, this is the latest released
 version of Zig and the latest released version of Node. It doesn't matter if
-you have random versions of Node or Zig on your system already.  The dependency you need for every possible package are as follows:
+you have random versions of Node or Zig on your system already.  **We patch zig so that it can build position independent .zig code \-\- this is not in upstream yet \(or even proposed\). Thus you can't use your own version of zig.  This is only relevant for the python\-wasm package.** 
+
+The dependency you need for every possible package are as follows:
 
 - On MacOS, install the [XCode command line tools.](https://developer.apple.com/xcode/resources/) 
 
