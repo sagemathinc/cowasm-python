@@ -11,7 +11,7 @@ TARBALL = ${UPSTREAM}/mpmath-${VERSION}.tar.gz
 include ../build/Makefile-rules
 
 ${BUILD_WASM}/.built: ${BUILD_WASM}/.build
-	cd ../cpython && make pip # TODO: would be much nicer if npm package of python-wasm supported pip/distutils
+	cd ../cpython && make python-wasm
 	cd ${BUILD_WASM} \
 		&& python-wasm setup.py build
 	touch ${BUILD_WASM}/.built
@@ -25,7 +25,7 @@ ${DIST_WASM}/.built: ${BUILD_WASM}/.built
 	touch ${DIST_WASM}/.built
 
 test: ${DIST_WASM}/.built
-	cd ../cpython && make pip  # TODO
+	cd ../cpython && make python-wasm
 	# Test that importing from the bundle works:
 	PYTHONPATH=${DIST_WASM} python-wasm -c 'import mpmath'
 	# Run actual test suite

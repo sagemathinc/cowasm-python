@@ -11,7 +11,7 @@ TARBALL = ${UPSTREAM}/sympy-${VERSION}.tar.gz
 include ../build/Makefile-rules
 
 ${BUILD_WASM}/.built: ${BUILD_WASM}/.build
-	cd ../cpython && make pip  # TODO
+	cd ../cpython && make python-wasm
 	cd ${BUILD_WASM} \
 		&& ${BIN}/python-wasm setup.py build
 	touch ${BUILD_WASM}/.built

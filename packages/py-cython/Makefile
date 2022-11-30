@@ -11,7 +11,7 @@ TARBALL = ${UPSTREAM}/cython-${VERSION}.tar.gz
 include ../build/Makefile-rules
 
 ${BUILD_WASM}/.built: ${BUILD_WASM}/.build
-	cd ../cpython && make python-wasm  # TODO
+	cd ../cpython && make python-wasm
 	cd ${BUILD_WASM} \
 		&& python-wasm setup.py build
 	touch ${BUILD_WASM}/.built
