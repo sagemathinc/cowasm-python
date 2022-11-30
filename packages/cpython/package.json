@@ -46,5 +46,8 @@
     "@cowasm/termcap": "^1.0.0",
     "@cowasm/zlib": "^1.0.0",
     "dylink": "^0.12.0"
+  },
+  "dependencies": {
+    "@cowasm/kernel": "^0.27.9"
   }
 }

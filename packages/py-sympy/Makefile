@@ -17,9 +17,9 @@ ${BUILD_WASM}/.built: ${BUILD_WASM}/.build
 	touch ${BUILD_WASM}/.built
 
 ${DIST_WASM}/.built: ${BUILD_WASM}/.built
-	cd ../cpython && make native  # TODO: python-wasm doesn't work with cowasm_bundler *yet*.
+	cd ../cpython && make python-wasm  # TODO: python-wasm doesn't work with cowasm_bundler *yet*.
 	cd ${BUILD_WASM}/build/lib \
-		&& python-native -m cowasm_bundler sympy \
+		&& python-wasm -m cowasm_bundler sympy \
 		&& mkdir -p ${DIST_WASM} \
 		&& cp sympy.tar.xz ${DIST_WASM}
 	touch ${DIST_WASM}/.built

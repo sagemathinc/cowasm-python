@@ -40,16 +40,16 @@ ${BUILD_WASM}/.install: node_modules ${BUILD_WASM}/.patched
 	touch ${BUILD_WASM}/.install
 
 ${DIST_WASM}/.built: ${BUILD_WASM}/.install
-	cd ../cpython && make native  # TODO: python-wasm doesn't work with cowasm_bundler *yet*.
+	cd ../cpython && make python-wasm  # TODO: python-wasm doesn't work with cowasm_bundler *yet*.
 	cd ${BUILD_WASM}/build/lib* \
 		&& rm -rf pandas/tests \
-		&& python-native -m cowasm_bundler pandas \
+		&& python-wasm -m cowasm_bundler pandas \
 		&& mkdir -p ${DIST_WASM} \
 		&& mv pandas.tar.xz ${DIST_WASM}
 	cd ${PACKAGES}/cpython/dist/wasm/lib/python3.11/site-packages \
-		&& python-native -m cowasm_bundler pytz pytz/zoneinfo && mv pytz.tar.xz ${DIST_WASM} \
-		&& python-native -m cowasm_bundler dateutil dateutil/zoneinfo && mv dateutil.tar.xz ${DIST_WASM} \
-		&& mkdir -p six && cp six.py six/__init__.py && python-native -m cowasm_bundler six && mv six.tar.xz ${DIST_WASM}
+		&& python-wasm -m cowasm_bundler pytz pytz/zoneinfo && mv pytz.tar.xz ${DIST_WASM} \
+		&& python-wasm -m cowasm_bundler dateutil dateutil/zoneinfo && mv dateutil.tar.xz ${DIST_WASM} \
+		&& mkdir -p six && cp six.py six/__init__.py && python-wasm -m cowasm_bundler six && mv six.tar.xz ${DIST_WASM}
 	touch ${DIST_WASM}/.built
 
 # Just a trivial test for now.

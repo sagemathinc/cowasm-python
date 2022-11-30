@@ -5,18 +5,10 @@ on a case-by-case basis.  There is no version information, since that's
 going to be in the npm package.json file, and obviously no architecture
 since there is only one architecture.
 
-We are going to **attempt** to change cpython to allow importing CoWasm
-bundles, i.e., so files as part of zips.  This impossible in a traditional
-OS, but we are writing the OS and control the dynamic linker, so it should
-be possible.
-
 The idea of making Python modules only available in maximally compiled
 zip archive form is very inspired by Javascript web bundlers.  It is
 is antithetical to how wheels, and Python packaging generally works!
 But that is because the constraints are very, very different.
-
-We will move this code to another package once it stabilizes and we use it for
-multiple modules.
 """
 
 import io, os, sys, tarfile, time, zipfile
@@ -120,20 +112,23 @@ def create_bundle(name, extra_files):
 
     # Python stdlib uses the same options as below, and it's easiest
     # to work with these params using possibly older versions of zip.
-    # NOTE: compression=zipfile.ZIP_LZMA is a bit smaller, but fails on import, probably
-    # due to a subtle issue with webassembly.  We will revisit this later.
 
-    with CoWasmBundle(f'{name}.zip',
+    # We use an in-memory buffer, since writing to disk then reading
+    # back triggers some WASI sync issues right now (TODO), and of course
+    # we don't need a file anyways since we just convert to a tarball below.
+    # To see this bug though, try to bundle the sympy package on macOS.
+    # Second we don't compress since we're just going to extract it again
+    # below, so it would be a waste of time.
+    zip = CoWasmBundle(io.BytesIO(),
                       'w',
-                      optimize=2,
-                      compression=zipfile.ZIP_DEFLATED) as zp:
-        zp.writepy(name, filterfunc=notests)
-        zp.write_so(name, filterfunc=notests)
-        for extra in extra_files:
-            print(f"Including extra '{extra}'")
-            zp.write_all(extra)
+                      compression=zipfile.ZIP_STORED)
+    zip.writepy(name, filterfunc=notests)
+    zip.write_so(name, filterfunc=notests)
+    for extra in extra_files:
+        print(f"Including extra '{extra}'")
+        zip.write_all(extra)
 
-    # Also create a tar.xz by *converting* the zip.  We do this partly since
+    # Create a tar.xz by *converting* the zip.  We do this partly since
     # there's a lot of work into making a zip with the correct contents in it,
     # both above and in the cpython zipfile module, and we reuse that effort.
     #
@@ -141,20 +136,19 @@ def create_bundle(name, extra_files):
     # support importing them.  The recipe below to convert a zip into a tar
     # is inspired by
     #    https://unix.stackexchange.com/questions/146264/is-there-a-way-to-convert-a-zip-to-a-tar-without-extracting-it-to-the-filesystem
+    # Note that npm also uses tarballs rather than zip for its packages.
+
     tar = tarfile.open(f'{name}.tar.xz', "w:xz")
-    zip = zipfile.ZipFile(f'{name}.zip', "r")
     now = time.time()
     for filename in zip.namelist():
         if filename.endswith('/'): continue
+        print(f"Adding '{filename}'")
         data = zip.read(filename)
         tarinfo = tarfile.TarInfo()
         tarinfo.name = filename
         tarinfo.size = len(data)
         tarinfo.mtime = now
         tar.addfile(tarinfo, io.BytesIO(data))
-
-    # Finally, we delete the zip, since it wastes space and we are not using it.
-    os.unlink(f'{name}.zip')
 
 
 if __name__ == '__main__':

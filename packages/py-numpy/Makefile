@@ -58,11 +58,11 @@ ${BUILD_WASM}/.install: node_modules ${BUILD_WASM}/.patched
 	touch ${BUILD_WASM}/.install
 
 ${DIST_WASM}/.built: ${BUILD_WASM}/.install
-	cd ../cpython && make native  # TODO: python-wasm doesn't work with cowasm_bundler *yet*.
+	cd ../cpython && make python-wasm
 	cd ${BUILD_WASM}/build/lib* \
 		&& rm -rf numpy/core/include \
 		&& cp -rv ../src*/numpy/core/include numpy/core/ \
-		&& python-native -m cowasm_bundler numpy numpy/core/multiarray.py numpy/core/include \
+		&& python-wasm -m cowasm_bundler numpy numpy/core/multiarray.py numpy/core/include \
 		&& mkdir -p ${DIST_WASM} \
 		&& cp numpy.tar.xz ${DIST_WASM}
 	touch ${DIST_WASM}/.built

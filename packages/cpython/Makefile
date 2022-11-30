@@ -113,7 +113,8 @@ run-native: ${DIST_NATIVE}/.built ${BIN}/python-native
 
 ## WASM
 
-${BUILD_WASM}/.patched: node_modules ${BUILD_WASM}/.build
+${BUILD_WASM}/.patched: ${BUILD_WASM}/.build
+	cd ../build && make node
 	# Create declarations that make everything extension modules need
 	# accessible from outside our "python.wasm as a shared library".
 	npx dylink-libpython ${BUILD_WASM} > ${BUILD_WASM}/Programs/libpython.c
@@ -126,6 +127,9 @@ ${BUILD_WASM}/.patched: node_modules ${BUILD_WASM}/.build
 	cp src/Setup.local ${BUILD_WASM}/Modules/Setup.local
 	# Custom code to run at startup
 	cp src/sitecustomize.py ${BUILD_WASM}/Lib
+	# Copy over our small cowasm-specific library with functionality for our packages.
+	cp ${SRC}/cowasm_bundler.py ${BUILD_WASM}/Lib
+	cp ${SRC}/cowasm_importer.py ${BUILD_WASM}/Lib
 	# Make empty sys/wait.h so that python's configure will conclude that we have sys/wait.h; we will
 	# explicitly add anything that is really used from there to posix-wasm.h
 	mkdir ${BUILD_WASM}/sys
@@ -234,9 +238,6 @@ ${DIST_WASM}/.install-cpython: node_modules ${DIST_WASM}/.built-cpython
 
 	# For some reason (upstream bug?) test-tomllib isn't copied over, but it's nice to have for testing.
 	cp -rv ${BUILD_WASM}/Lib/test/test_tomllib ${DIST_WASM}/lib/python3.11/test/
-	# Copy over our small cowasm-specific library with functionality for our packages.
-	cp ${SRC}/cowasm_importer.py ${DIST_WASM}/lib/python3.11/site-packages
-	cp ${SRC}/cowasm_importer.py ${DIST_WASM}/lib/dist
 	# Used for extension modules to efficiently access what Python exports.
 	cp ${BUILD_WASM}/Programs/libpython.c ${DIST_WASM}/lib
 	# Done!
@@ -286,8 +287,6 @@ ${DIST_WASM}/.built: ${DIST_WASM}/.install-cpython ${BIN}/python-native
 	# Also mv zip to a more meaningful name.
 	cd ${DIST_WASM}/lib/dist/ \
 		&& zip -u python311.zip lib-dynload/* \
-		&& cp ../python3.11/site-packages/cowasm_importer.py . \
-		&& zip -u python311.zip cowasm_importer.py \
 		&& mv python311.zip python-stdlib.zip
 
 	# Next make the MINIMAL python0.zip, which is all that's needed to start python (e.g., for a

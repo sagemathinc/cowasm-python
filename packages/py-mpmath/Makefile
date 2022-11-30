@@ -17,9 +17,9 @@ ${BUILD_WASM}/.built: ${BUILD_WASM}/.build
 	touch ${BUILD_WASM}/.built
 
 ${DIST_WASM}/.built: ${BUILD_WASM}/.built
-	cd ../cpython && make native  # TODO: python-wasm doesn't work with cowasm_bundler *yet*.
+	cd ../cpython && make python-wasm
 	cd ${BUILD_WASM}/build/lib \
-		&& python-native -m cowasm_bundler mpmath \
+		&& python-wasm -m cowasm_bundler mpmath \
 		&& mkdir -p ${DIST_WASM} \
 		&& cp mpmath.* ${DIST_WASM}
 	touch ${DIST_WASM}/.built

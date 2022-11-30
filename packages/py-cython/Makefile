@@ -17,14 +17,14 @@ ${BUILD_WASM}/.built: ${BUILD_WASM}/.build
 	touch ${BUILD_WASM}/.built
 
 ${DIST_WASM}/.built: ${BUILD_WASM}/.built
-	cd ../cpython && make native  # TODO: python-wasm doesn't work with cowasm_bundler *yet*.
+	cd ../cpython && make python-wasm
 	rm -rf ${DIST_WASM}
 	mkdir -p ${DIST_WASM}
 	# NOTE: there's a lot of files in Cython that are NOT .so, not .pyc, but do
 	# need to get included. They are also not in some special "data" location.
 	cd ${BUILD_WASM}/build/lib* \
-		&& python-native -m cowasm_bundler Cython cython.py Cython/Utility Cython/Includes \
-		&& python-native -m cowasm_bundler pyximport \
+		&& python-wasm -m cowasm_bundler Cython cython.py Cython/Utility Cython/Includes \
+		&& python-wasm -m cowasm_bundler pyximport \
 		&& cp *.tar.xz ${DIST_WASM}
 	cp ${BUILD_WASM}/cython.py ${DIST_WASM}/
 
@@ -42,7 +42,10 @@ ${BIN}/cython: bin/cython
 # we need to do regarding disabling setjmp, etc., to get this stuff to build.
 
 test: wasm
-	cd ../cpython && make python-wasm  pip
+	cd ../cpython && make python-wasm pip
+	# Test that importing from the bundle works:
+	PYTHONPATH=${DIST_WASM} python-wasm -c 'import Cython'
+	# Run an actual demo test suite
 	cd ${BUILD_WASM}/Demos \
 		&& rm -f *.so *.c \
 		&& touch numpy.py \
