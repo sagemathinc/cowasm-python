@@ -40,7 +40,7 @@
     "debug": "^4.3.4"
   },
   "devDependencies": {
-    "@cowasm/cpython": "^1.1.0",
+    "@cowasm/cpython": "^1.2.0",
     "@cowasm/cython": "^1.0.0",
     "@cowasm/mpmath": "^1.0.0",
     "@cowasm/numpy": "^1.0.0",
