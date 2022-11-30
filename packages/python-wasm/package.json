@@ -1,6 +1,6 @@
 {
   "name": "python-wasm",
-  "version": "0.26.2",
+  "version": "0.26.3",
   "description": "python-wasm -- WebAssembly Python for servers and browsers with sympy, Cython, numpy, and more",
   "main": "./dist/node.js",
   "browser": "./dist/browser.js",
@@ -11,12 +11,12 @@
     "tsconfig.json"
   ],
   "scripts": {
-    "build": "npm install && make all",
+    "build": "make all",
     "clean": "make clean",
     "tsc": "tsc -w",
     "test": "tsc && npx jest --no-watchman --runInBand ./dist",
     "test-watch": "npx jest --watch ./dist",
-    "prepublishOnly": "make clean && make OPT='-O ReleaseSmall' -j4 && cowasm-opt ./dist && npx jest --no-watchman --runInBand  ./dist"
+    "prepublishOnly": "make clean && make OPT='-O ReleaseSmall' all && cowasm-opt ./dist && npx jest --no-watchman --runInBand  ./dist"
   },
   "bin": {
     "python-wasm": "./bin/python-wasm"
@@ -40,7 +40,7 @@
     "debug": "^4.3.4"
   },
   "devDependencies": {
-    "@cowasm/cpython": "^1.0.2",
+    "@cowasm/cpython": "^1.1.0",
     "@cowasm/cython": "^1.0.0",
     "@cowasm/mpmath": "^1.0.0",
     "@cowasm/numpy": "^1.0.0",

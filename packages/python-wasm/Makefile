@@ -123,7 +123,7 @@ ${DIST}/hellozig.${PLATFORM}.so: src/extension/hellozigmodule.zig src/extension/
 	cd ../zig && make
 	cd src/extension \
 		&&	${BIN}/cowasm-cc ${CFLAGS} -Oz -c hellozigmodule.c -o hellozigmodule-c.o \
-		&&	${BIN}/cowasm-zig -v ${CFLAGS} ${OPT} hellozigmodule-c.o hellozigmodule.zig \
+		&&	${BIN}/cowasm-zig ${CFLAGS} ${OPT} hellozigmodule-c.o hellozigmodule.zig \
 		&&	rm hellozigmodule-c.o \
 		&&  mv hellozigmodule.wasm ${DIST}/hellozig.${PLATFORM}.so
 
