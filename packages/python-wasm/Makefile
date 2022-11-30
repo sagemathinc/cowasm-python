@@ -32,6 +32,7 @@ ${DIST}/python.wasm: node_modules src/python.zig src/signal.zig ${BUILD}/libpyth
 	mkdir -p ${DIST}
 	cd src/ \
 		&& ${BIN}/cowasm-zig \
+			-cowasm-verbose \
 			${OPT} \
 			${CFLAGS} \
 			${LDFLAGS} \
