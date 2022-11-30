@@ -95,7 +95,7 @@ ${DIST_NATIVE}/.built: ${BUILD_NATIVE}/.build
 	cp ${SRC}/cowasm_bundler.py ${DIST_NATIVE}/lib/python3.11/site-packages
 	touch ${DIST_NATIVE}/.built
 
-${BIN}/python-native: bin/python-native
+${BIN}/python-native: bin/python-native ${DIST_NATIVE}/.built
 	rm -f ${BIN}/python-native
 	ln -s ${CWD}/bin/python-native ${BIN}/python-native
 	# We also make it python3.  This is necessary since the cowasm-cc script
@@ -261,7 +261,7 @@ MINIMAL_READLINE = termcap lib-dynload/readline.cpython-311-wasm32-wasi.so  rlco
 # below by
 #    && python-wasm ./Tools/wasm/wasm_assets.py
 
-${DIST_WASM}/.install-data: ${DIST_WASM}/.install-cpython native ${BIN}/python-native
+${DIST_WASM}/.built: ${DIST_WASM}/.install-cpython ${BIN}/python-native
 	# Build wasm asset bundle (the pyc files, etc.).
 	cd ${BUILD_WASM} \
 		&& mkdir -p usr/local/lib/python3.11/lib-dynload/  \
@@ -300,19 +300,7 @@ ${DIST_WASM}/.install-data: ${DIST_WASM}/.install-cpython native ${BIN}/python-n
 		&& zip ../python-readline.zip ${MINIMAL_FILES} ${MINIMAL_READLINE} \
 		&& cd .. && rm -rf tmp
 
-	touch ${DIST_WASM}/.install-data
-
-
-${DIST_WASM}/.built: ${DIST_WASM}/.install-data
 	touch ${DIST_WASM}/.built
-
-
-
-# Use "make run-wasm" to run our WASM python at the command line.
-# You can also just run `python-wasm` in the top level bin/ directory.
-.PHONY: python-wasm
-python-wasm: wasm ${BIN}/python-wasm
-	@${BIN}/python-wasm
 
 
 ###########
@@ -371,7 +359,10 @@ SUPPORTED_TESTS = test_atexit test_base64 test_calendar test_capi test_cgitb tes
 
 
 ${BIN}/python-wasm: ${DIST_WASM}/.built ${CWD}/bin/python-wasm
-	@ln -sf ${CWD}/bin/python-wasm ${BIN}/python-wasm
+	ln -sf ${CWD}/bin/python-wasm ${BIN}/python-wasm
+
+.PHONY: python-wasm
+python-wasm: ${BIN}/python-wasm
 
 test-pip: pip
 	echo "Testing PIP"
