@@ -114,9 +114,9 @@ run-native: ${DIST_NATIVE}/.built
 ## WASM
 
 ${BUILD_WASM}/.patched: node_modules ${BUILD_WASM}/.build
-	# Copy over declarations that make everything extension modules need
+	# Create declarations that make everything extension modules need
 	# accessible from outside our "python.wasm as a shared library".
-	cp $(shell cowasm-package-path dylink)/wasm-export/libpython.c ${BUILD_WASM}/Programs
+	npx dylink-libpython ${BUILD_WASM} > ${BUILD_WASM}/Programs/libpython.c
 	# Scripts to make it easy to change CPython and rebuild iteratively
 	ln -sf ${SRC}/rebuild ${BUILD_WASM}/rebuild
 	# Copy the config.site, which answers questions needed for
@@ -237,6 +237,8 @@ ${DIST_WASM}/.install-cpython: node_modules ${DIST_WASM}/.built-cpython
 	# Copy over our small cowasm-specific library with functionality for our packages.
 	cp ${SRC}/cowasm_importer.py ${DIST_WASM}/lib/python3.11/site-packages
 	cp ${SRC}/cowasm_importer.py ${DIST_WASM}/lib/dist
+	# Used for extension modules to efficiently access what Python exports.
+	cp ${BUILD_WASM}/Programs/libpython.c ${DIST_WASM}/lib
 	# Done!
 	touch ${DIST_WASM}/.install-cpython
 
@@ -378,7 +380,7 @@ test-pip: pip
 .PHONY: test-pip
 
 
-# Some tests can be pretty slow, e.g., test_tarfile takes about a minute or more on a FAST computer, 
+# Some tests can be pretty slow, e.g., test_tarfile takes about a minute or more on a FAST computer,
 # and doing 4 in parallel on a slow computer.
 test: wasm native ${BIN}/python-wasm test-pip
 	echo "Running ${SUPPORTED_TEST_DESC}"

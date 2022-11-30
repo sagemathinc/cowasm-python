@@ -9,9 +9,8 @@ all: node_modules ${DIST}/.built python
 
 include ../build/Makefile-rules
 
-CPYTHON = $(shell cowasm-package-path @cowasm/cpython)
+CPYTHON_WASM = $(shell cowasm-package-path @cowasm/cpython)
 POSIX_WASM = $(shell cowasm-package-path @cowasm/posix-wasm)
-DYLINK = $(shell cowasm-package-path dylink)
 
 CFLAGS = -I$(shell cowasm-package-path @cowasm/cpython)/include/python3.11 -I$(shell cowasm-package-path @cowasm/posix-wasm)
 LDFLAGS = -L$(shell cowasm-package-path @cowasm/cpython)/lib -lpython3.11
@@ -25,7 +24,7 @@ ${BUILD}/libpython.o:
 	mkdir -p ${BUILD}
 	cd ../zig && make
 	${BIN}/cowasm-cc -Oz ${CFLAGS} \
-		-c ${DYLINK}/wasm-export/libpython.c \
+		-c ${CPYTHON_WASM}/lib/libpython.c \
 		-o ${BUILD}/libpython.o
 
 ${DIST}/python.wasm: node_modules src/python.zig src/signal.zig ${BUILD}/libpython.o
@@ -46,15 +45,15 @@ BUNDLES = ${DIST}/python-minimal.zip ${DIST}/python-readline.zip ${DIST}/python-
 
 ${DIST}/python-minimal.zip: node_modules
 	mkdir -p ${DIST}
-	cp ${CPYTHON}/lib/dist/python-minimal.zip ${DIST}
+	cp ${CPYTHON_WASM}/lib/dist/python-minimal.zip ${DIST}
 
 ${DIST}/python-readline.zip: node_modules
 	mkdir -p ${DIST}
-	cp ${CPYTHON}/lib/dist/python-readline.zip ${DIST}
+	cp ${CPYTHON_WASM}/lib/dist/python-readline.zip ${DIST}
 
 ${DIST}/python-stdlib.zip: node_modules
 	mkdir -p ${DIST}
-	cp ${CPYTHON}/lib/dist/python-stdlib.zip ${DIST}
+	cp ${CPYTHON_WASM}/lib/dist/python-stdlib.zip ${DIST}
 
 PYTHON_PACKAGES = ${DIST}/Cython.tar.xz ${DIST}/mpmath.tar.xz ${DIST}/numpy.tar.xz ${DIST}/sympy.tar.xz ${DIST}/pandas.tar.xz ${DIST}/pytz.tar.xz ${DIST}/dateutil.tar.xz ${DIST}/six.tar.xz
 
