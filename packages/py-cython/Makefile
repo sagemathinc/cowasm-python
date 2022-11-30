@@ -11,7 +11,7 @@ TARBALL = ${UPSTREAM}/cython-${VERSION}.tar.gz
 include ../build/Makefile-rules
 
 ${BUILD_WASM}/.built: ${BUILD_WASM}/.build
-	cd ../cpython && make python-wasm
+ 	cd ../cpython && make python-wasm pip
 	cd ${BUILD_WASM} \
 		&& python-wasm setup.py build
 	touch ${BUILD_WASM}/.built
@@ -42,7 +42,7 @@ ${BIN}/cython: bin/cython
 # we need to do regarding disabling setjmp, etc., to get this stuff to build.
 
 test: wasm
-	cd ../cpython && make python-wasm  # TODO
+	cd ../cpython && make python-wasm  pip
 	cd ${BUILD_WASM}/Demos \
 		&& rm -f *.so *.c \
 		&& touch numpy.py \

@@ -50,7 +50,7 @@ CYTHON = $(shell cowasm-package-path @cowasm/cython)
 
 ${BUILD_WASM}/.install: node_modules ${BUILD_WASM}/.patched
 	mkdir -p ${DIST_WASM}
-	cd ../cpython && make python-wasm
+	cd ../cpython && make python-wasm pip
 	# TODO: We install rather than just build *solely* so that
 	# pip install with pandas doesn't try to install numpy later.
 	cd ${BUILD_WASM} \

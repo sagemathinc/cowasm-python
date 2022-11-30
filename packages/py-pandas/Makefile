@@ -28,7 +28,7 @@ PYTHONPATH = $(shell cowasm-package-path @cowasm/cython):$(shell cowasm-package-
 ${BUILD_WASM}/.install: node_modules ${BUILD_WASM}/.patched
 	mkdir -p ${DIST_WASM}
 	# TODO: ugh
-	cd ../cpython && make python-wasm
+	cd ../cpython && make python-wasm  pip
 	# TODO: This is a hack right now so that pip install pandas doesn't try to build numpy
 	cd ../py-numpy && make
 	# TODO: Now install pandas first via setup.py, then using pip to install
