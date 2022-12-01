@@ -60,9 +60,12 @@ ${DIST_WASM}/.built: node_modules ${BUILD_WASM}/.lib
 	cd ${BUILD_WASM}/build/lib* \
 		&& rm -rf numpy/core/include \
 		&& cp -rv ../src*/numpy/core/include numpy/core/ \
-		&& npx @cowasm/cpython -m cowasm_bundler numpy numpy/core/multiarray.py numpy/core/include
+		&& npx @cowasm/cpython -m cowasm_bundler numpy numpy/core/multiarray.py
 	rm -rf ${DIST_WASM} && mkdir -p ${DIST_WASM}
 	cd ${DIST_WASM} && tar xf ${BUILD_WASM}/build/lib*/numpy.tar.xz
+	# The include files are needed to building anything that depends on numpy, and they aren't
+	# in the bundle:
+	cp -r ${BUILD_WASM}/numpy/core/include ${DIST_WASM}/numpy/core/
 	touch ${DIST_WASM}/.built
 
 # Just a trivial test for now.
