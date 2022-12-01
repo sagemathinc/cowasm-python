@@ -1,6 +1,6 @@
 {
   "name": "@cowasm/cpython",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "WebAssembly port of CPython interpeter",
   "main": "index.js",
   "files": [
@@ -16,8 +16,8 @@
     "index.js"
   ],
   "scripts": {
-    "build": "make wasm && make pip",
-    "prepublishOnly": "make clean-wasm && make wasm && make test && rm -rf dist/wasm/lib/python*/test/",
+    "build": "make wasm",
+    "prepublishOnly": "make clean-wasm && make wasm && make test && make publishable",
     "test": "make test"
   },
   "bin": "bin/python-wasm",

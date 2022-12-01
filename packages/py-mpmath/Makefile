@@ -10,27 +10,28 @@ TARBALL = ${UPSTREAM}/mpmath-${VERSION}.tar.gz
 
 include ../build/Makefile-rules
 
-${BUILD_WASM}/.built: ${BUILD_WASM}/.build
-	cd ../cpython && make python-wasm  pip
+PIP = $(shell cowasm-package-path @cowasm/python-pip)
+
+
+${BUILD_WASM}/.built: node_modules ${BUILD_WASM}/.build
 	cd ${BUILD_WASM} \
-		&& python-wasm setup.py build
+		&& PYTHONPATH=${PIP} npx @cowasm/cpython setup.py build
 	touch ${BUILD_WASM}/.built
 
 ${DIST_WASM}/.built: ${BUILD_WASM}/.built
-	cd ../cpython && make python-wasm
 	cd ${BUILD_WASM}/build/lib \
-		&& python-wasm -m cowasm_bundler mpmath \
-		&& mkdir -p ${DIST_WASM} \
-		&& cp mpmath.* ${DIST_WASM}
+		&& npx @cowasm/cpython -m cowasm_bundler mpmath
+	rm -rf ${DIST_WASM}
+	mkdir -p ${DIST_WASM}
+	cd ${DIST_WASM} && tar xf ${BUILD_WASM}/build/lib/mpmath.tar.xz
 	touch ${DIST_WASM}/.built
 
 test: ${DIST_WASM}/.built
-	cd ../cpython && make python-wasm  pip
 	# Test that importing from the bundle works:
-	PYTHONPATH=${DIST_WASM} python-wasm -c 'import mpmath'
-	# Run actual test suite
+	PYTHONPATH=${DIST_WASM} npx @cowasm/cpython -c 'import mpmath'
+	# Run the full test suite
 	cd ${BUILD_WASM}/build/lib \
-		&& PYTHONPATH=`pwd` python-wasm mpmath/tests/runtests.py
+		&& PYTHONPATH=${DIST_WASM}:`pwd` npx @cowasm/cpython mpmath/tests/runtests.py
 
 
 

@@ -427,3 +427,30 @@ test-skipped:  wasm native
 	echo "Running ${SKIPPED_TEST_DESC}"
 	cd ${BUILD_WASM} && PATH=${TEST_PATH} ${RUN_TESTS}  --timeout=60 ${SKIPPED_TESTS}
 	echo "Ran ${SKIPPED_TEST_DESC}"
+
+
+# This is sort of like the 'assets' thing that is part of cpython, but it's
+# much more useful (but less small).
+${DIST_WASM}/.publishable: wasm
+	# Do not need the tests in the published version -- they're huge
+	rm -rf ${DIST_WASM}/lib/python3.11/test
+	# Temporarily make it into a package so that we can bundle it
+	touch ${DIST_WASM}/lib/python3.11/__init__.py
+	# Bundle it
+	cd ${DIST_WASM}/lib/ && ${CWD}/bin/python-wasm -m cowasm_bundler python3.11
+	# Move it out of the way
+	mv ${DIST_WASM}/lib/python3.11 ${DIST_WASM}/lib/python3.11.orig
+	# Extract bundle
+	cd ${DIST_WASM}/lib/ && tar xf python3.11.tar.xz
+	# Remove __init__.pyc
+	rm -f ${DIST_WASM}/lib/python3.11/__init__.pyc
+	# Also site-packages
+	mkdir ${DIST_WASM}/lib/python3.11/site-packages
+	# Move compiled so files over
+	mv ${DIST_WASM}/lib/python3.11.orig/lib-dynload ${DIST_WASM}/lib/python3.11/
+	# Remove stuff
+	rm -rf ${DIST_WASM}/lib/python3.11.tar.xz ${DIST_WASM}/lib/python3.11.orig
+	touch ${DIST_WASM}/.publishable
+
+.PHONY: publishable
+publishable: ${DIST_WASM}/.publishable

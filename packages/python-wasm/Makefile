@@ -64,7 +64,7 @@ ${DIST}/Cython.tar.xz: node_modules
 
 ${DIST}/mpmath.tar.xz: node_modules
 	mkdir -p ${DIST}
-	cp $(shell cowasm-package-path @cowasm/mpmath)/mpmath.tar.xz ${DIST}
+	cd $(shell cowasm-package-path @cowasm/python-mpmath) && tar -Jcf ${DIST}/mpmath.tar.xz mpmath && sync
 
 ${DIST}/numpy.tar.xz: node_modules
 	mkdir -p ${DIST}
