@@ -10,12 +10,23 @@ TARBALL = ${UPSTREAM}/setuptools-${VERSION}.tar.gz
 
 include ../build/Makefile-rules
 
-${BUILD_WASM}/.built: node_modules ${BUILD_WASM}/.build
+${BUILD_WASM}/.patched: ${BUILD_WASM}/.build
+	# We apply one patch to support building C++ extensions.  Without this, the numpy
+	# build fails pretty quickly. This is needed due to our hacky approach to -fPIC.
+	cd ${BUILD_WASM} && cat ${SRC}/patches/01-c++.patch | patch -p1
+	touch ${BUILD_WASM}/.patched
+
+${BUILD_WASM}/.built: node_modules ${BUILD_WASM}/.patched
 	cd ${BUILD_WASM} \
 		&& npx @cowasm/cpython setup.py build
 	touch ${BUILD_WASM}/.built
 
 ${DIST_WASM}/.built: ${BUILD_WASM}/.built
+	# Hack: since we are not "properly" installing using "ensurepip", we replace
+	# the code in version.py that calls pkg_resources (and looks at data in site-packages),
+	# and instead just hardcode the version, which we know of course.
+	echo '__version__="${VERSION}"' > ${BUILD_WASM}/build/lib/setuptools/version.py
+	# create bundles
 	cd ${BUILD_WASM}/build/lib \
 		&& npx @cowasm/cpython -m cowasm_bundler setuptools \
 		&& npx @cowasm/cpython -m cowasm_bundler _distutils_hack \

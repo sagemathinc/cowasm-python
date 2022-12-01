@@ -1,7 +1,6 @@
 {
-  "name": "@cowasm/numpy",
+  "name": "@cowasm/py-numpy",
   "version": "1.0.0",
-  "upstream-version": "1.23.4",
   "description": "WebAssembly build of the NumPy Python library",
   "main": "index.js",
   "files": [
@@ -30,6 +29,8 @@
   },
   "homepage": "https://github.com/sagemathinc/cowasm-python/tree/main/packages/py-numpy",
   "devDependencies": {
-    "@cowasm/cython": "^1.0.0"
+    "@cowasm/cpython": "^1.3.0",
+    "@cowasm/py-cython": "^1.0.0",
+    "@cowasm/py-pip": "^1.1.1"
   }
 }

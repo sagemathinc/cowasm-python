@@ -21,13 +21,13 @@ include ../build/Makefile-rules
 
 export PATH := ${SRC}/fake-bin:$(PATH)
 
-
 ${BUILD_WASM}/.patched: ${BUILD_WASM}/.build
 	cd ${BUILD_WASM} \
 		&& cat ${SRC}/patches/01-ENH-Add-support-for-platforms-with-missing-fenv-flag.patch | patch -p1 \
 		&& cat ${SRC}/patches/03-disable-complex.patch | patch -p1 \
 		&& cat ${SRC}/patches/04-random-no-lm.patch | patch -p1 \
 		&& cat ${SRC}/patches/05-no-backtrace.patch | patch -p1 \
+		&& cat ${SRC}/patches/06-setup-setuptools.patch | patch -p1 \
 		&& echo "" > numpy/core/include/setjmp.h \
 		&& echo "" > numpy/core/include/execinfo.h
 	touch ${BUILD_WASM}/.patched
@@ -46,25 +46,23 @@ ${BUILD_WASM}/.patched: ${BUILD_WASM}/.build
 #    such as pandas expect a full install in place (with all headers) in
 #    order to compile themselves.
 
-CYTHON = $(shell cowasm-package-path @cowasm/cython)
+PYTHONPATH = $(shell cowasm-package-path @cowasm/py-pip):$(shell cowasm-package-path @cowasm/py-cython)
 
-${BUILD_WASM}/.install: node_modules ${BUILD_WASM}/.patched
+${BUILD_WASM}/.lib: node_modules ${BUILD_WASM}/.patched
 	mkdir -p ${DIST_WASM}
-	cd ../cpython && make python-wasm pip
 	# TODO: We install rather than just build *solely* so that
 	# pip install with pandas doesn't try to install numpy later.
 	cd ${BUILD_WASM} \
-		&& PYTHONPATH=${CYTHON} python-wasm setup.py install
-	touch ${BUILD_WASM}/.install
+		&& PYTHONPATH=${PYTHONPATH} npx @cowasm/cpython setup.py build
+	touch ${BUILD_WASM}/.lib
 
-${DIST_WASM}/.built: ${BUILD_WASM}/.install
-	cd ../cpython && make python-wasm
+${DIST_WASM}/.built: node_modules ${BUILD_WASM}/.lib
 	cd ${BUILD_WASM}/build/lib* \
 		&& rm -rf numpy/core/include \
 		&& cp -rv ../src*/numpy/core/include numpy/core/ \
-		&& python-wasm -m cowasm_bundler numpy numpy/core/multiarray.py numpy/core/include \
-		&& mkdir -p ${DIST_WASM} \
-		&& cp numpy.tar.xz ${DIST_WASM}
+		&& npx @cowasm/cpython -m cowasm_bundler numpy numpy/core/multiarray.py numpy/core/include
+	rm -rf ${DIST_WASM} && mkdir -p ${DIST_WASM}
+	cd ${DIST_WASM} && tar xf ${BUILD_WASM}/build/lib*/numpy.tar.xz
 	touch ${DIST_WASM}/.built
 
 # Just a trivial test for now.
@@ -72,10 +70,5 @@ test: ${DIST_WASM}/.built
 	rm -rf ${BUILD_WASM}/cowasm-test
 	mkdir -p ${BUILD_WASM}/cowasm-test
 	@cd ${BUILD_WASM}/cowasm-test \
-		&& PYTHONPATH=${DIST_WASM} python-wasm -c "import numpy; print(numpy.array([3,8,9,5,0,7,7]).sum())" | grep 39 \
+		&& PYTHONPATH=${DIST_WASM} npx @cowasm/cpython -c "import numpy; print(numpy.array([3,8,9,5,0,7,7]).sum())" | grep 39 \
 		&& echo "NUMPY TEST PASSED!"
-
-${DIST_NATIVE}/.built: ${BUILD_NATIVE}/.build
-	# nothing for now
-	touch ${DIST_NATIVE}/.built
-

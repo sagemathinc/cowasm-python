@@ -54,3 +54,6 @@ else
     ZIG_NATIVE_CFLAGS=""
     ZIG_NATIVE_CFLAGS_GNU=""
 endif
+
+
+PIP = $(shell cowasm-package-path @cowasm/py-pip)

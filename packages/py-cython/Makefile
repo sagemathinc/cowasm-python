@@ -10,24 +10,24 @@ TARBALL = ${UPSTREAM}/cython-${VERSION}.tar.gz
 
 include ../build/Makefile-rules
 
-${BUILD_WASM}/.built: ${BUILD_WASM}/.build
-	cd ../cpython && make python-wasm pip
+${BUILD_WASM}/.built: node_modules ${BUILD_WASM}/.build
 	cd ${BUILD_WASM} \
-		&& python-wasm setup.py build
+		&& PYTHONPATH=${PIP} npx @cowasm/cpython setup.py build
 	touch ${BUILD_WASM}/.built
 
-${DIST_WASM}/.built: ${BUILD_WASM}/.built
-	cd ../cpython && make python-wasm
+${DIST_WASM}/.built: node_modules ${BUILD_WASM}/.built
 	rm -rf ${DIST_WASM}
 	mkdir -p ${DIST_WASM}
 	# NOTE: there's a lot of files in Cython that are NOT .so, not .pyc, but do
 	# need to get included. They are also not in some special "data" location.
 	cd ${BUILD_WASM}/build/lib* \
-		&& python-wasm -m cowasm_bundler Cython cython.py Cython/Utility Cython/Includes \
-		&& python-wasm -m cowasm_bundler pyximport \
-		&& cp *.tar.xz ${DIST_WASM}
+		&& npx @cowasm/cpython -m cowasm_bundler Cython cython.py Cython/Utility Cython/Includes \
+		&& npx @cowasm/cpython -m cowasm_bundler pyximport
+	rm -rf ${DIST_WASM}
+	mkdir -p ${DIST_WASM}
 	cp ${BUILD_WASM}/cython.py ${DIST_WASM}/
-
+	cd ${DIST_WASM} && tar xf ${BUILD_WASM}/build/lib*/Cython.tar.xz
+	cd ${DIST_WASM} && tar xf ${BUILD_WASM}/build/lib*/pyximport.tar.xz
 	touch ${DIST_WASM}/.built
 
 ${BIN}/cython: bin/cython
@@ -42,14 +42,13 @@ ${BIN}/cython: bin/cython
 # we need to do regarding disabling setjmp, etc., to get this stuff to build.
 
 test: wasm
-	cd ../cpython && make python-wasm pip
 	# Test that importing from the bundle works:
-	PYTHONPATH=${DIST_WASM} python-wasm -c 'import Cython'
+	PYTHONPATH=${DIST_WASM} npx @cowasm/cpython -c 'import Cython'
 	# Run an actual demo test suite
 	cd ${BUILD_WASM}/Demos \
 		&& rm -f *.so *.c \
 		&& touch numpy.py \
-		&& python-wasm setup.py build_ext --inplace \
-		&& python-wasm run_primes.py 20 \
-		&& python-wasm run_spam.py \
-		&& python-wasm integrate_timing.py
+		&& npx @cowasm/cpython setup.py build_ext --inplace \
+		&& npx @cowasm/cpython run_primes.py 20 \
+		&& npx @cowasm/cpython run_spam.py \
+		&& npx @cowasm/cpython integrate_timing.py

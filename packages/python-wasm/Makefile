@@ -60,15 +60,15 @@ PYTHON_PACKAGES = ${DIST}/Cython.tar.xz ${DIST}/mpmath.tar.xz ${DIST}/numpy.tar.
 
 ${DIST}/Cython.tar.xz: node_modules
 	mkdir -p ${DIST}
-	cp $(shell cowasm-package-path @cowasm/cython)/Cython.tar.xz ${DIST}
+	cd $(shell cowasm-package-path @cowasm/py-cython) && tar -Jcf ${DIST}/Cython.tar.xz Cython
 
 ${DIST}/mpmath.tar.xz: node_modules
 	mkdir -p ${DIST}
-	cd $(shell cowasm-package-path @cowasm/python-mpmath) && tar -Jcf ${DIST}/mpmath.tar.xz mpmath && sync
+	cd $(shell cowasm-package-path @cowasm/py-mpmath) && tar -Jcf ${DIST}/mpmath.tar.xz mpmath
 
 ${DIST}/numpy.tar.xz: node_modules
 	mkdir -p ${DIST}
-	cp $(shell cowasm-package-path @cowasm/numpy)/numpy.tar.xz ${DIST}
+	cd $(shell cowasm-package-path @cowasm/py-numpy) && tar -Jcf ${DIST}/numpy.tar.xz numpy
 
 ${DIST}/pandas.tar.xz: node_modules
 	mkdir -p ${DIST}

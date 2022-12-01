@@ -10,9 +10,6 @@ TARBALL = ${UPSTREAM}/mpmath-${VERSION}.tar.gz
 
 include ../build/Makefile-rules
 
-PIP = $(shell cowasm-package-path @cowasm/python-pip)
-
-
 ${BUILD_WASM}/.built: node_modules ${BUILD_WASM}/.build
 	cd ${BUILD_WASM} \
 		&& PYTHONPATH=${PIP} npx @cowasm/cpython setup.py build

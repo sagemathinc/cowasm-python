@@ -11,9 +11,17 @@ TARBALL = ${UPSTREAM}/pip-${VERSION}.tar.gz
 
 include ../build/Makefile-rules
 
-SETUPTOOLS = $(shell cowasm-package-path @cowasm/python-setuptools)
+SETUPTOOLS = $(shell cowasm-package-path @cowasm/py-setuptools)
 
-${BUILD_WASM}/.built: node_modules ${BUILD_WASM}/.build
+${BUILD_WASM}/.patched: ${BUILD_WASM}/.build
+	# It would be much nicer to implement a better mmap.  But for now, let's just patch it out:
+	cd ${BUILD_WASM} && cat ${SRC}/patches/01-pip-no-mmap.patch | patch -p1
+	# It would be better to have a better fallback for threads that works in some cases so we
+	# don't need this. But for now, just remove it:
+	cd ${BUILD_WASM} && cat ${SRC}/patches/02-pip-no-auto-refresh-progress.patch  | patch -p1
+	touch ${BUILD_WASM}/.patched
+
+${BUILD_WASM}/.built: node_modules ${BUILD_WASM}/.patched
 	cd ${BUILD_WASM} \
 		&& PYTHONPATH=${SETUPTOOLS} npx @cowasm/cpython setup.py build
 	touch ${BUILD_WASM}/.built
