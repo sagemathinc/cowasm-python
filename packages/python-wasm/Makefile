@@ -72,19 +72,19 @@ ${DIST}/numpy.tar.xz: node_modules
 
 ${DIST}/pandas.tar.xz: node_modules
 	mkdir -p ${DIST}
-	cp $(shell cowasm-package-path @cowasm/pandas)/pandas.tar.xz ${DIST}
+	cd $(shell cowasm-package-path @cowasm/py-pandas) && tar -Jcf ${DIST}/pandas.tar.xz pandas
 
 ${DIST}/pytz.tar.xz: node_modules
 	mkdir -p ${DIST}
-	cp $(shell cowasm-package-path @cowasm/pandas)/pytz.tar.xz ${DIST}
+	cd $(shell cowasm-package-path @cowasm/py-pandas) && tar -Jcf ${DIST}/pytz.tar.xz pytz
 
 ${DIST}/dateutil.tar.xz: node_modules
 	mkdir -p ${DIST}
-	cp $(shell cowasm-package-path @cowasm/pandas)/dateutil.tar.xz ${DIST}
+	cd $(shell cowasm-package-path @cowasm/py-pandas) && tar -Jcf ${DIST}/dateutil.tar.xz dateutil
 
 ${DIST}/six.tar.xz: node_modules
 	mkdir -p ${DIST}
-	cp $(shell cowasm-package-path @cowasm/pandas)/six.tar.xz ${DIST}
+	cd $(shell cowasm-package-path @cowasm/py-pandas) && tar -Jcf ${DIST}/six.tar.xz six
 
 ${DIST}/sympy.tar.xz: node_modules
 	mkdir -p ${DIST}
