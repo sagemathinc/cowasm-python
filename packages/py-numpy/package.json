@@ -31,6 +31,6 @@
   "devDependencies": {
     "@cowasm/cpython": "^1.3.0",
     "@cowasm/py-cython": "^1.0.0",
-    "@cowasm/py-pip": "^1.1.1"
+    "@cowasm/py-pip": "^1.1.4"
   }
 }

@@ -25,6 +25,8 @@ ${DIST_WASM}/.built: ${BUILD_WASM}/.built
 	# Hack: since we are not "properly" installing using "ensurepip", we replace
 	# the code in version.py that calls pkg_resources (and looks at data in site-packages),
 	# and instead just hardcode the version, which we know of course.
+	# Note that we only use setuptools to bootstrap installing pip, then replace
+	# setuptools with the one from pip.
 	echo '__version__="${VERSION}"' > ${BUILD_WASM}/build/lib/setuptools/version.py
 	# create bundles
 	cd ${BUILD_WASM}/build/lib \

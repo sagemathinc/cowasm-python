@@ -32,6 +32,6 @@
     "@cowasm/cpython": "^1.3.0",
     "@cowasm/py-cython": "^1.0.0",
     "@cowasm/py-numpy": "^1.0.2",
-    "@cowasm/py-pip": "^1.1.3"
+    "@cowasm/py-pip": "^1.1.4"
   }
 }

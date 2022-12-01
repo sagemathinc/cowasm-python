@@ -28,12 +28,17 @@ ${BUILD_WASM}/.built: node_modules ${BUILD_WASM}/.patched
 
 # Trying to use a bundle (e.g., only pyc, etc.,) leads to endless problems, since
 # many scripts and components that use pip assume the .py files are there.
-${DIST_WASM}/.built: ${BUILD_WASM}/.built
+${DIST_WASM}/.built: node_modules ${BUILD_WASM}/.built
 	rm -rf ${DIST_WASM}
 	mkdir -p ${DIST_WASM}
 	cp -r ${BUILD_WASM}/build/lib/pip ${DIST_WASM}/
-	# We also include setuptools in this case.
-	cp -r ${SETUPTOOLS}/* ${DIST_WASM}
+	# Build tools (e.g., for pandas, etc.) absolute require that setuptools actually be pip installed.
+	# So we pip install it into site-packages, then copy everything over dist_wasm, so that
+	# the directory setuptools-65.6.3.dist-info exists.  Basically, we used our own setuptools package
+	# just for bootstrapping.  Probably this is very similar to what ensurepip does?
+	# We do NOT just pip install pip because of the patches above...
+	PYTHONPATH=${SETUPTOOLS}:${DIST_WASM} npx @cowasm/cpython -m pip install setuptools --target=${BUILD_WASM}/site-packages
+	cp -r ${BUILD_WASM}/site-packages/* ${DIST_WASM}
 
 test: ${DIST_WASM}/.built
 	# Importing from the bundle works:
