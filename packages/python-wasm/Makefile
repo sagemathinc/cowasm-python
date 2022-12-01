@@ -88,7 +88,7 @@ ${DIST}/six.tar.xz: node_modules
 
 ${DIST}/sympy.tar.xz: node_modules
 	mkdir -p ${DIST}
-	cp $(shell cowasm-package-path @cowasm/sympy)/sympy.tar.xz ${DIST}/
+	cd $(shell cowasm-package-path @cowasm/py-sympy) && tar -Jcf ${DIST}/sympy.tar.xz sympy
 
 ${DIST}/python-everything.zip: ${DIST}/python-stdlib.zip ${PYTHON_PACKAGES} ${DIST}/python.wasm
 	cd ${DIST} \

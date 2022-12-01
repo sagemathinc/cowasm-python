@@ -1,7 +1,6 @@
 {
   "name": "@cowasm/py-mpmath",
   "version": "1.0.0",
-  "upstream-version": "1.0.0",
   "description": "WebAssembly build of the mpmath python library",
   "main": "index.js",
   "files": [

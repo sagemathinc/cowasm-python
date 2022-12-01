@@ -26,14 +26,14 @@ ${BUILD_WASM}/.built: node_modules ${BUILD_WASM}/.patched
 		&& PYTHONPATH=${SETUPTOOLS} npx @cowasm/cpython setup.py build
 	touch ${BUILD_WASM}/.built
 
+# Trying to use a bundle (e.g., only pyc, etc.,) leads to endless problems, since
+# many scripts and components that use pip assume the .py files are there.
 ${DIST_WASM}/.built: ${BUILD_WASM}/.built
-	cd ${BUILD_WASM}/build/lib \
-		&& npx @cowasm/cpython -m cowasm_bundler pip
 	rm -rf ${DIST_WASM}
 	mkdir -p ${DIST_WASM}
+	cp -r ${BUILD_WASM}/build/lib/pip ${DIST_WASM}/
+	# We also include setuptools in this case.
 	cp -r ${SETUPTOOLS}/* ${DIST_WASM}
-	cd ${DIST_WASM} && tar xf ${BUILD_WASM}/build/lib/pip.tar.xz
-	touch ${DIST_WASM}/.built
 
 test: ${DIST_WASM}/.built
 	# Importing from the bundle works:

@@ -1,7 +1,6 @@
 {
   "name": "@cowasm/py-cython",
   "version": "1.0.0",
-  "upstream-version": "0.29.32",
   "description": "WebAssembly build of the cython python library",
   "main": "index.js",
   "files": ["dist/wasm/**", "README.md", "package.json", "index.js"],
