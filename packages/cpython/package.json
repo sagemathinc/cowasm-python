@@ -23,7 +23,7 @@
   "bin": "bin/python-wasm",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/sagemathinc/cowasm.git"
+    "url": "git+ssh://git@github.com/sagemathinc/cowasm-python.git"
   },
   "keywords": [
     "WebAssembly",
