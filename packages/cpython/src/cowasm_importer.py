@@ -111,14 +111,48 @@ class CoWasmPackageLoader(importlib.abc.Loader):
     def provides(self, fullname: str):
         return path_to_bundle(fullname) is not None
 
+    def _do_import(self, name, path):
+        log("_do_import", name, path)
+        mod = extract_archive_and_import(name, path)
+        # We save the spec so we can use it to proxy get_code, etc.
+        # TODO: I don't actually know if any of this proxying really works.
+        # I implemented this in hopes of getting "-m pip" to work as a bundle,
+        # but it doesn't.
+        self._spec = mod.__spec__
+        return mod
+
     def create_module(self, spec):
         log("create_module", spec)
         path = path_to_bundle(spec.name)
-        return extract_archive_and_import(spec.name, path)
+        return self._do_import(spec.name, path)
 
     def exec_module(self, module):
         pass
 
+    def get_code(self, fullname):
+        log("get_code", fullname)
+        if not hasattr(self, '_spec'):
+            path = path_to_bundle(fullname)
+            self._do_import(fullname, path)
+        return self._spec.loader.get_code(fullname)
+
+    def get_data(self, fullname):
+        if not hasattr(self, '_spec'):
+            path = path_to_bundle(fullname)
+            self._do_import(fullname, path)
+        return self._spec.loader.get_data(fullname)
+
+    def get_filename(self, fullname):
+        if not hasattr(self, '_spec'):
+            path = path_to_bundle(fullname)
+            self._do_import(fullname, path)
+        return self._spec.loader.get_filename(fullname)
+
+    def get_source(self, fullname):
+        if not hasattr(self, '_spec'):
+            path = path_to_bundle(fullname)
+            self._do_import(fullname, path)
+        return self._spec.loader.get_source(fullname)
 
 def extract_archive_and_import(name: str, archive_path: str):
     archive_path = cowasm_modules[name]
@@ -140,10 +174,14 @@ def extract_archive_and_import(name: str, archive_path: str):
 
     # Updating the directory timestamp should be automatic on any OS,
     # but *right now* it is not with memfs, so we do it manually.
+    # (That said, I think I patched around this.)
     # Also this can workaround issues. Basically this is clearing the python
     # cache.  Sometimes on linux vm's, this is critical.
     import pathlib
     pathlib.Path(package_dirname).touch()
+    # Alternatively, invalidating the cache should work no matter what,
+    # and is recommended in the docs, so we do it:
+    importlib.invalidate_caches()
 
     if verbose:
         log(time() - t, package_dirname)
