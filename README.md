@@ -29,10 +29,6 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 See  https://github.com/sagemathinc/cowasm for more about the CoWasm project.
 
-<!--
-[<img src="https://github.com/sagemathinc/cowasm/actions/workflows/docker-image.yml/badge.svg"  alt="Docker Image CI"  width="172px"  height="20px"  style="object-fit:cover"/>](https://github.com/sagemathinc/cowasm/actions/workflows/docker-image.yml)
--->
-
 ### Try python-wasm
 
 Try the python-wasm REPL under node.js (version at least 16):

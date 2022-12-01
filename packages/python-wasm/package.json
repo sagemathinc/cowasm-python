@@ -32,9 +32,9 @@
   "author": "William Stein <wstein@sagemath.com>",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/sagemathinc/cowasm/issues"
+    "url": "https://github.com/sagemathinc/cowasm-python/issues"
   },
-  "homepage": "https://github.com/sagemathinc/cowasm/tree/main/packages/python-wasm",
+  "homepage": "https://github.com/sagemathinc/cowasm-python/tree/main/packages/python-wasm",
   "dependencies": {
     "@cowasm/kernel": "^0.27.2",
     "debug": "^4.3.4"

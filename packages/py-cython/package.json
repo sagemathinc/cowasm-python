@@ -18,7 +18,7 @@
   "author": "William Stein <wstein@sagemath.com>",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/sagemathinc/cowasm/issues"
+    "url": "https://github.com/sagemathinc/cowasm-python/issues"
   },
-  "homepage": "https://github.com/sagemathinc/cowasm/tree/main/packages/py-cython"
+  "homepage": "https://github.com/sagemathinc/cowasm-python/tree/main/packages/py-cython"
 }

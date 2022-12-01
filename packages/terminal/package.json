@@ -27,9 +27,9 @@
   "author": "William Stein",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/sagemathinc/cowasm/issues"
+    "url": "https://github.com/sagemathinc/cowasm-python/issues"
   },
-  "homepage": "https://github.com/sagemathinc/cowasm/tree/main/packages/terminal",
+  "homepage": "https://github.com/sagemathinc/cowasm-python/tree/main/packages/terminal",
   "devDependencies": {
     "buffer": "^6.0.3",
     "css-loader": "^6.7.1",
