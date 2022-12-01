@@ -27,52 +27,31 @@ PYTHONPATH = $(shell cowasm-package-path @cowasm/py-cython):$(shell cowasm-packa
 #    deps because pandas is already installed.
 # This would break if pypi pandas is updated, but we haven't updated our
 # package here yet, etc.  Not ideal.  This is just a first step.
-# ${BUILD_WASM}/.install: node_modules ${BUILD_WASM}/.patched
-# 	# TODO: Now install pandas first via setup.py, then using pip to install
-# 	# just the remaining dependencies.
-# 	cd ${BUILD_WASM} \
-# 		&& PYTHONPATH="${PYTHONPATH}" npx @cowasm/cpython setup.py build || true \
-# 		&& PYTHONPATH="${PYTHONPATH}" npx @cowasm/cpython -m pip install --target build python-dateutil pytz
-# 	touch ${BUILD_WASM}/.install
-
-
-# Horrible old approach that works.
-
 ${BUILD_WASM}/.install: node_modules ${BUILD_WASM}/.patched
-	mkdir -p ${DIST_WASM}
-	# TODO: ugh
-	cd ../cpython && make pip
-	# TODO: This is a hack right now so that pip install pandas doesn't try to build numpy
-	cd ../py-numpy && make && cd build/wasm && PYTHONPATH="${PYTHONPATH}" python-wasm setup.py install
 	# TODO: Now install pandas first via setup.py, then using pip to install
 	# just the remaining dependencies.
 	cd ${BUILD_WASM} \
-		&& PYTHONPATH="${PYTHONPATH}" python-wasm setup.py install \
-		&& python-wasm -m pip install pandas || true \
-		&& python-wasm -m pip install pandas
+		&& PYTHONPATH="${PYTHONPATH}" npx @cowasm/cpython setup.py build
+	PYTHONPATH="${PYTHONPATH}" npx @cowasm/cpython -m pip install --target ${BUILD_WASM}/site-packages python-dateutil pytz
 	touch ${BUILD_WASM}/.install
 
 
 ${DIST_WASM}/.built: node_modules ${BUILD_WASM}/.install
 	rm -rf ${DIST_WASM} && mkdir -p ${DIST_WASM}
 	cd ${BUILD_WASM} \
-		&& npx @cowasm/cpython -m cowasm_bundler pandas \
-		&& cd build \
+		&& npx @cowasm/cpython -m cowasm_bundler pandas
+	cd ${BUILD_WASM}/site-packages \
 		&& npx @cowasm/cpython -m cowasm_bundler pytz pytz/zoneinfo \
 		&& npx @cowasm/cpython -m cowasm_bundler dateutil dateutil/zoneinfo \
 		&& mkdir -p six && cp six.py six/__init__.py && npx @cowasm/cpython -m cowasm_bundler six
 
 	cd ${DIST_WASM} && tar xf ${BUILD_WASM}/pandas.tar.xz
-	cd ${DIST_WASM} && tar xf ${BUILD_WASM}/build/pytz.tar.xz
-	cd ${DIST_WASM} && tar xf ${BUILD_WASM}/build/dateutil.tar.xz
-	cd ${DIST_WASM} && tar xf ${BUILD_WASM}/build/six.tar.xz
+	cd ${DIST_WASM} && tar xf ${BUILD_WASM}/site-packages/pytz.tar.xz
+	cd ${DIST_WASM} && tar xf ${BUILD_WASM}/site-packages/dateutil.tar.xz
+	cd ${DIST_WASM} && tar xf ${BUILD_WASM}/site-packages/six.tar.xz
 	touch ${DIST_WASM}/.built
 
 # Just a trivial test for now.
-test: ${DIST_WASM}/.built
-	rm -rf ${BUILD_WASM}/cowasm-test
-	mkdir -p ${BUILD_WASM}/cowasm-test
-	@cd ${BUILD_WASM}/cowasm-test \
-		&& PYTHONPATH="${PYTHONPATH}:${DIST_WASM}" python-wasm -c "import pandas" \
-		&& echo "Trivial PANDAS TEST PASSED!"
+test: ${DIST_WASM}/.built node_modules
+	@PYTHONPATH="${DIST_WASM}:${PYTHONPATH}" npx @cowasm/cpython -c "import pandas" && echo "Trivial PANDAS TEST PASSED!"
 
