@@ -262,7 +262,7 @@ MINIMAL_READLINE = termcap lib-dynload/readline.cpython-311-wasm32-wasi.so  rlco
 # below by
 #    && python-wasm ./Tools/wasm/wasm_assets.py
 
-${DIST_WASM}/.built: ${DIST_WASM}/.install-cpython ${BIN}/python-native
+${DIST_WASM}/.built: node_modules ${DIST_WASM}/.install-cpython ${BIN}/python-native
 	# Build wasm asset bundle (the pyc files, etc.).
 	cd ${BUILD_WASM} \
 		&& mkdir -p usr/local/lib/python3.11/lib-dynload/  \
@@ -298,6 +298,16 @@ ${DIST_WASM}/.built: ${DIST_WASM}/.install-cpython ${BIN}/python-native
 		&& zip ../python-minimal.zip ${MINIMAL_FILES} \
 		&& zip ../python-readline.zip ${MINIMAL_FILES} ${MINIMAL_READLINE} \
 		&& cd .. && rm -rf tmp
+
+	# Add some code at the end of the _sysconfigdata so that it is sufficiently relocatable so that
+	# it's possible to use setuptools and build C extensions.  I don't understand why python doesn't
+	# already do this -- maybe there is some subtle edge case that makes it impossible to do
+	# in general?  Or maybe people don't relocate python installs then build.  I don't know.
+	cat ${SRC}/patches/17-fix-sysconfigdata.py >> ${DIST_WASM}/lib/python3.11/_sysconfigdata__wasi_wasm32-wasi.py
+
+	# We also copy the posix-wasm.h that was used for the build, so that building C extensions isn't
+	# complicated by trying to find this.
+	cp -v ${POSIX_WASM}/*.h ${DIST_WASM}/include/python3.11/
 
 	touch ${DIST_WASM}/.built
 
