@@ -49,7 +49,7 @@ ${BUILD_WASM}/.patched: ${BUILD_WASM}/.build
 PYTHONPATH = $(shell cowasm-package-path @cowasm/py-pip):$(shell cowasm-package-path @cowasm/py-cython)
 
 ${BUILD_WASM}/.lib: node_modules ${BUILD_WASM}/.patched
-	mkdir -p ${DIST_WASM}
+	cd ../build && make zig
 	# TODO: We install rather than just build *solely* so that
 	# pip install with pandas doesn't try to install numpy later.
 	cd ${BUILD_WASM} \

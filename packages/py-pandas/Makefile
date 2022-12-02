@@ -28,6 +28,7 @@ PYTHONPATH = $(shell cowasm-package-path @cowasm/py-cython):$(shell cowasm-packa
 # This would break if pypi pandas is updated, but we haven't updated our
 # package here yet, etc.  Not ideal.  This is just a first step.
 ${BUILD_WASM}/.install: node_modules ${BUILD_WASM}/.patched
+	cd ../build && make zig
 	# TODO: Now install pandas first via setup.py, then using pip to install
 	# just the remaining dependencies.
 	cd ${BUILD_WASM} \
