@@ -98,11 +98,6 @@ ${DIST_NATIVE}/.built: ${BUILD_NATIVE}/.build
 ${BIN}/python-native: bin/python-native ${DIST_NATIVE}/.built
 	rm -f ${BIN}/python-native
 	ln -s ${CWD}/bin/python-native ${BIN}/python-native
-	# We also make it python3.  This is necessary since the cowasm-cc script
-	# has /usr/bin/env python so it can be used without needing python-native.
-	# However, when building python-wasm the env gets setup in such a way
-	# that trying to run any other python3 on the system will break.
-	ln -s ${CWD}/bin/python-native ${BIN}/python3
 	touch ${BIN}/python-native
 
 # Use "make run-native" to run native python at the command line.
