@@ -32,3 +32,6 @@ A major medium-term goal for this project is to get the entire test suite to pas
 
 Note that running `make test` at the top level of `python-wasm` does NOT run the large full cpython test suite yet, since there are numerous failures.
 
+## Issues
+
+There are of course many, as documented in the GitHub issues: [https://github.com/sagemathinc/cowasm\-python/issues](https://github.com/sagemathinc/cowasm-python/issues) 

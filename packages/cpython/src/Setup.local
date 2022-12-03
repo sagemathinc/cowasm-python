@@ -25,7 +25,15 @@ pyexpat pyexpat.c
 # OpenSSL bindings
 _ssl _ssl.c -DOPENSSL_THREADS -I$(OPENSSL_WASM)/include $(OPENSSL_WASM)/lib/libssl.a $(OPENSSL_WASM)/lib/libcrypto.a
 
-# TODO: _hashlib causes trouble and so far not needed.  Python has its own smaller version and this is huge.
+# Ctypes / libffi
+
+_ctypes _ctypes/_ctypes.c _ctypes/callbacks.c _ctypes/callproc.c _ctypes/stgdict.c _ctypes/cfield.c -DHAVE_FFI_PREP_CIF_VAR -DHAVE_FFI_PREP_CLOSURE_LOC -DHAVE_FFI_CLOSURE_ALLOC -I$(LIBFFI_WASM)/include -L$(LIBFFI_WASM)/lib -lffi
+
+
+
+
+# TODO: _hashlib causes trouble and so far not needed.  Python has its own smaller version and this
+# C version is huge.
 # More importantly, having it breaks things.  In particular "import hashlib, ssl" then exit
 # and get WebAssembly crash.
 # _hashlib _hashopenssl.c -DOPENSSL_THREADS -I$(OPENSSL_WASM)/include $(OPENSSL_WASM)/lib/libcrypto.a

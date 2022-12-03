@@ -29,6 +29,7 @@ OPENSSL_WASM = $(shell cowasm-package-path @cowasm/openssl)
 SQLITE_WASM = $(shell cowasm-package-path @cowasm/sqlite)
 BZIP2_WASM = $(shell cowasm-package-path @cowasm/bzip2)
 ZLIB_WASM = $(shell cowasm-package-path @cowasm/zlib)
+LIBFFI_WASM = $(shell cowasm-package-path @cowasm/libffi)
 
 PYTHON_WASM = ${BIN}/python-wasm
 
@@ -214,7 +215,7 @@ ${DIST_WASM}/.built-cpython: node_modules ${BUILD_WASM}/.patched ${DIST_NATIVE}/
 	# NOTE: I have seen "error: unable to build WASI libc CRT file: FileNotFound" when using "make -j8",
 	# and had it go away when removing parallel build.
 	cd ${BUILD_WASM} && \
-		LZMA_WASM="${LZMA_WASM}" LIBEDIT_WASM="${LIBEDIT_WASM}" NCURSES_WASM="${NCURSES_WASM}" TERMCAP_WASM="${TERMCAP_WASM}" OPENSSL_WASM="${OPENSSL_WASM}" SQLITE_WASM="${SQLITE_WASM}" BZIP2_WASM="${BZIP2_WASM}" ZLIB_WASM="${ZLIB_WASM}" make -j8
+		LZMA_WASM="${LZMA_WASM}" LIBEDIT_WASM="${LIBEDIT_WASM}" NCURSES_WASM="${NCURSES_WASM}" TERMCAP_WASM="${TERMCAP_WASM}" OPENSSL_WASM="${OPENSSL_WASM}" SQLITE_WASM="${SQLITE_WASM}" BZIP2_WASM="${BZIP2_WASM}" LIBFFI_WASM="${LIBFFI_WASM}" ZLIB_WASM="${ZLIB_WASM}" make -j8
 	mkdir -p ${DIST_WASM} && touch ${DIST_WASM}/.built-cpython
 
 ${DIST_WASM}/.install-cpython: node_modules ${DIST_WASM}/.built-cpython
@@ -229,7 +230,7 @@ ${DIST_WASM}/.install-cpython: node_modules ${DIST_WASM}/.built-cpython
 
 	# Install as usual.  Output is huge so we do not show it all.
 	cd ${BUILD_WASM} && \
-		LZMA_WASM="${LZMA_WASM}" LIBEDIT_WASM="${LIBEDIT_WASM}" NCURSES_WASM="${NCURSES_WASM}" TERMCAP_WASM="${TERMCAP_WASM}" OPENSSL_WASM="${OPENSSL_WASM}"  SQLITE_WASM="${SQLITE_WASM}" BZIP2_WASM="${BZIP2_WASM}" ZLIB_WASM="${ZLIB_WASM}" make install | tail -n 10
+		LZMA_WASM="${LZMA_WASM}" LIBEDIT_WASM="${LIBEDIT_WASM}" NCURSES_WASM="${NCURSES_WASM}" TERMCAP_WASM="${TERMCAP_WASM}" OPENSSL_WASM="${OPENSSL_WASM}"  SQLITE_WASM="${SQLITE_WASM}" BZIP2_WASM="${BZIP2_WASM}" LIBFFI_WASM="${LIBFFI_WASM}" ZLIB_WASM="${ZLIB_WASM}" make install | tail -n 10
 
 	# For some reason (upstream bug?) test-tomllib isn't copied over, but it's nice to have for testing.
 	cp -rv ${BUILD_WASM}/Lib/test/test_tomllib ${DIST_WASM}/lib/python3.11/test/
