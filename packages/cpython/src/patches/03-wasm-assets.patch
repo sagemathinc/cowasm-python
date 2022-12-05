@@ -1,5 +1,5 @@
 --- native/Tools/wasm/wasm_assets.py	2022-10-24 10:35:39
-+++ wasm/Tools/wasm/wasm_assets.py	2022-11-09 13:17:41
++++ wasm/Tools/wasm/wasm_assets.py	2022-12-05 13:46:30
 @@ -89,21 +89,24 @@
      "wsgiref/",
  )
@@ -12,9 +12,10 @@
      "audioop": ["aifc.py", "sunau.py", "wave.py"],
      "_crypt": ["crypt.py"],
 -    "_curses": ["curses/"],
-+    #"_curses": ["curses/"],
-     "_ctypes": ["ctypes/"],
+-    "_ctypes": ["ctypes/"],
 -    "_decimal": ["decimal.py"],
++    #"_curses": ["curses/"],
++    #"_ctypes": ["ctypes/"],
 +    #"_decimal": ["decimal.py"],
      "_dbm": ["dbm/ndbm.py"],
      "_gdbm": ["dbm/gnu.py"],
