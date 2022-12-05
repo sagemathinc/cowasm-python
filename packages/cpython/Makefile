@@ -441,9 +441,15 @@ test-skipped:  wasm native
 ${DIST_WASM}/.publishable: wasm
 	# Do not need the tests in the published version -- they're huge
 	rm -rf ${DIST_WASM}/lib/python3.11/test
+
+	# Graphics -- Remove idle which we are nowhere near supporting (and is big):
+	rm -rf ${DIST_WASM}/lib/python3.11/idlelib
+	rm -rf ${DIST_WASM}/lib/python3.11/*tkinter
+	rm -rf ${DIST_WASM}/lib/python3.11/turtle*
+
 	# Temporarily make it into a package so that we can bundle it
 	touch ${DIST_WASM}/lib/python3.11/__init__.py
-	# Bundle it
+	# Bundle it -- using python-native since it's more compressed:
 	cd ${DIST_WASM}/lib/ && ${CWD}/bin/python-wasm -m cowasm_bundler python3.11
 	# Move it out of the way
 	mv ${DIST_WASM}/lib/python3.11 ${DIST_WASM}/lib/python3.11.orig
@@ -455,6 +461,9 @@ ${DIST_WASM}/.publishable: wasm
 	mkdir ${DIST_WASM}/lib/python3.11/site-packages
 	# Move compiled so files over
 	mv ${DIST_WASM}/lib/python3.11.orig/lib-dynload ${DIST_WASM}/lib/python3.11/
+	# Compress libpython3.11 to save 20MB decompressed.  Note that this obviously
+	# complicates the python-wasm package which has to explicitly copy this out and decompress it.
+	xz ${DIST_WASM}/lib/libpython3.11.a
 	# Remove stuff
 	rm -rf ${DIST_WASM}/lib/python3.11.tar.xz ${DIST_WASM}/lib/python3.11.orig
 	touch ${DIST_WASM}/.publishable
