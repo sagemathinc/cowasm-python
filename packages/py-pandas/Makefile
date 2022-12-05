@@ -1,7 +1,7 @@
 include ../build/Makefile-vars
 
 # https://github.com/pandas-dev/pandas/releases
-VERSION=1.5.1
+VERSION=1.5.2
 
 URL = https://github.com/pandas-dev/pandas/releases/download/v${VERSION}/pandas-${VERSION}.tar.gz
 
@@ -10,11 +10,6 @@ TARBALL = ${UPSTREAM}/pandas-${VERSION}.tar.gz
 all: wasm
 
 include ../build/Makefile-rules
-
-${BUILD_WASM}/.patched: ${BUILD_WASM}/.build
-	cd ${BUILD_WASM} \
-		&& cat ${SRC}/patches/00-no-ctypes.patch | patch -p1
-	touch ${BUILD_WASM}/.patched
 
 
 PYTHONPATH = $(shell cowasm-package-path @cowasm/py-cython):$(shell cowasm-package-path @cowasm/py-numpy):$(shell cowasm-package-path @cowasm/py-pip)
@@ -27,7 +22,7 @@ PYTHONPATH = $(shell cowasm-package-path @cowasm/py-cython):$(shell cowasm-packa
 #    deps because pandas is already installed.
 # This would break if pypi pandas is updated, but we haven't updated our
 # package here yet, etc.  Not ideal.  This is just a first step.
-${BUILD_WASM}/.install: node_modules ${BUILD_WASM}/.patched
+${BUILD_WASM}/.install: node_modules ${BUILD_WASM}/.build
 	cd ../build && make zig
 	# TODO: Now install pandas first via setup.py, then using pip to install
 	# just the remaining dependencies.

@@ -1,6 +1,6 @@
 {
   "name": "@cowasm/py-pandas",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "WebAssembly build of the Pandas Python library",
   "main": "index.js",
   "files": [
@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/sagemathinc/cowasm-python/tree/main/packages/py-pandas",
   "devDependencies": {
-    "@cowasm/cpython": "^1.4.0",
+    "@cowasm/cpython": "^1.6.0",
     "@cowasm/py-cython": "^1.0.0",
     "@cowasm/py-numpy": "^1.0.2",
     "@cowasm/py-pip": "^1.1.4"
