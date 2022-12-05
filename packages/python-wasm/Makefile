@@ -13,12 +13,18 @@ CPYTHON_WASM = $(shell cowasm-package-path @cowasm/cpython)
 POSIX_WASM = $(shell cowasm-package-path @cowasm/posix-wasm)
 
 CFLAGS = -I$(shell cowasm-package-path @cowasm/cpython)/include/python3.11 -I$(shell cowasm-package-path @cowasm/posix-wasm)
-LDFLAGS = -L$(shell cowasm-package-path @cowasm/cpython)/lib -lpython3.11
+LDFLAGS = -L${BUILD} -lpython3.11
 
 ###
 # Python as a web assembly library with a few extras compiled in
 # needed be usable.
 ###
+
+# this is needed because we store libpython3.11.a compressed in the @cowasm/cpython package,
+# since it is 25MB and so rarely needed, except here.
+${BUILD}/libpython3.11.a:
+	cp ${CPYTHON_WASM}/lib/libpython3.11.a.xz ${BUILD}/libpython3.11.a.xz
+	xz -d ${BUILD}/libpython3.11.a.xz
 
 ${BUILD}/libpython.o:
 	mkdir -p ${BUILD}
@@ -27,7 +33,7 @@ ${BUILD}/libpython.o:
 		-c ${CPYTHON_WASM}/lib/libpython.c \
 		-o ${BUILD}/libpython.o
 
-${DIST}/python.wasm: node_modules src/python.zig src/signal.zig ${BUILD}/libpython.o
+${DIST}/python.wasm: node_modules src/python.zig src/signal.zig ${BUILD}/libpython.o ${BUILD}/libpython3.11.a
 	cd ../build && make zig
 	mkdir -p ${DIST}
 	cd src/ \

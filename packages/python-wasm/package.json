@@ -1,6 +1,6 @@
 {
   "name": "python-wasm",
-  "version": "0.26.3",
+  "version": "0.27.0",
   "description": "python-wasm -- WebAssembly Python for servers and browsers with sympy, Cython, numpy, and more",
   "main": "./dist/node.js",
   "browser": "./dist/browser.js",
@@ -16,7 +16,7 @@
     "tsc": "tsc -w",
     "test": "tsc && npx jest --no-watchman --runInBand ./dist",
     "test-watch": "npx jest --watch ./dist",
-    "prepublishOnly": "make clean && make OPT='-O ReleaseSmall' all && cowasm-opt ./dist && npx jest --no-watchman --runInBand  ./dist"
+    "prepublishOnly": "make clean && make OPT='-O ReleaseSmall' all && npx jest --no-watchman --runInBand  ./dist"
   },
   "bin": {
     "python-wasm": "./bin/python-wasm"
@@ -36,16 +36,16 @@
   },
   "homepage": "https://github.com/sagemathinc/cowasm-python/tree/main/packages/python-wasm",
   "dependencies": {
-    "@cowasm/kernel": "^0.27.2",
-    "@cowasm/py-pandas": "^1.0.0",
+    "@cowasm/kernel": "^0.28.0",
     "debug": "^4.3.4"
   },
   "devDependencies": {
-    "@cowasm/cpython": "^1.3.0",
+    "@cowasm/cpython": "^1.6.0",
     "@cowasm/posix-wasm": "^1.0.3",
     "@cowasm/py-cython": "^1.0.0",
     "@cowasm/py-mpmath": "^1.0.0",
-    "@cowasm/py-numpy": "^1.0.0",
+    "@cowasm/py-numpy": "^1.0.2",
+    "@cowasm/py-pandas": "^1.0.1",
     "@cowasm/py-sympy": "^1.0.0",
     "@types/jest": "^29.2.0",
     "@types/node": "^18.11.3",
