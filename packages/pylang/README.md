@@ -4,7 +4,9 @@ Lightweight implementation of the Python language in Javascript for use in node 
 
 **A few hundred killobytes compressed!**
 
-https://github.com/sagemathinc/cowasm-python/tree/main/packages/pylang
+- GITHUB: https://github.com/sagemathinc/cowasm-python/tree/main/packages/pylang
+
+- NPM: https://www.npmjs.com/package/pylang
 
 ## Quickstart
 
