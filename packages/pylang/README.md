@@ -2,6 +2,8 @@
 
 Lightweight implementation of the Python language in Javascript for use in node and the browser.
 
+**Less than 200KB compressed!**
+
 https://github.com/sagemathinc/cowasm-python/tree/main/packages/pylang
 
 ## Quickstart
@@ -10,7 +12,7 @@ Try out the REPL:
 
 ```sh
 $ npx pylang
-Welcome to pylang.  Using Node.js v16.13.0.
+Welcome to PyLang (12/6/2022, 11:53:14 PM) [Node.js v16.16.0 on arm64].
 >>> 2 + 3
 5
 >>> sum(range(10**7))
@@ -97,3 +99,4 @@ print(2^3)
 $ npx pylang a.py
 8
 ```
+

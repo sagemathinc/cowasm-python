@@ -8,7 +8,7 @@
 import { basename, join } from "path";
 import { readFileSync, readdirSync, writeFileSync } from "fs";
 import createCompiler from "./compiler";
-import { colored, pathExists } from "./utils";
+import { colored } from "./utils";
 import { deepEqual as origDeepEqual, AssertionError } from "assert";
 import { tmpdir } from "os";
 import { runInNewContext } from "vm";
@@ -23,10 +23,7 @@ export default function (
 ) {
   // run all tests and exit
   const failures: string[] = [];
-  let compilerDir = join(basePath, "dev");
-  if (!pathExists(join(compilerDir, "compiler.js"))) {
-    compilerDir = join(basePath, "release");
-  }
+  let compilerDir = libPath;
   const testPath = join(basePath, "test");
   const baselib = readFileSync(
     join(libPath, "baselib-plain-pretty.js"),

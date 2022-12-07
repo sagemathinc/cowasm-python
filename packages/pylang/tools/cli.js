@@ -558,7 +558,7 @@ delete lib/signatures.json
 opt("complete", "c,f,full", "bool", false, function () {
   /*
 Run the compilation repeatedly, as many times as neccessary,
-so that the compiler is built with the most upto date version
+so that the compiler is built with the most up to date version
 of itself.
 */
 });
@@ -589,14 +589,26 @@ Set the package name in the header
 */
 });
 
+opt("base_path", "", "string", "", function () {
+  /*
+Sets the base path of the source code, instead of
+automatically determining it from the bin.
+This is very useful since it allows us to compile
+the source of one version of the compiler using
+a binary distribution of an older version, hence
+we can bootstrap without having to store binaries
+in our Git repo.
+*/
+});
+
 opt("package_version", "", "string", "XXX", function () {
   /*
 Set the package version in the header
 */
 });
 
-opt("bugs_address", "bug_address", "string", "bugs@example.com", function () {
-  /*
+opt("bugs_address", "bug_address", "string", "wstein@sagemath.com", function () {
+/*
 Set the email address for bug reports in the header
 */
 });

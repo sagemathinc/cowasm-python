@@ -1,20 +1,32 @@
 {
   "name": "pylang",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "PyLang -- lightweight implementation of the Python language in Javascript for use in node and the browser.",
   "homepage": "https://github.com/sagemathinc/cowasm-python/tree/main/packages/pylang#readme",
-  "keywords": ["javascript", "python", "language", "compiler"],
+  "keywords": [
+    "javascript",
+    "python",
+    "language",
+    "compiler"
+  ],
   "main": "tools/compiler.js",
+  "files": [
+    "README.md",
+    "package.json",
+    "dist",
+    "bin"
+  ],
   "scripts": {
-    "test": "npx tsc && ./bin/pylang self --complete --test && cd bench && ../bin/pylang all.py",
+    "test": "npx tsc && ./bin/pylang self --complete --test . ",
     "start": "node bin/pylang",
-    "build": "npx tsc && node bin/pylang self --complete",
+    "build": "npx tsc && npx --yes pylang@1.1.0 self --complete --base-path .",
     "tsc": "npx tsc -w",
     "clean": "rm -rf dist",
     "format": "npm run yapf && npm run prettier",
     "mypy": "git grep -l '^# mypy' | xargs mypy",
     "prettier": "prettier --write .",
-    "yapf": "yapf -p -i --recursive src/output bench src/compiler.py src/parse.py src/utils.py  src/tokenizer.py"
+    "yapf": "yapf -p -i --recursive src/output bench src/compiler.py src/parse.py src/utils.py  src/tokenizer.py",
+    "prepublishOnly": "npm run clean && npm run build && npm run test"
   },
   "license": "BSD-3-Clause",
   "engines": {
@@ -33,7 +45,6 @@
   "bugs": {
     "url": "https://github.com/sagemathinc/cowasm-python/issues"
   },
-
   "devDependencies": {
     "@types/node": "^18.6.1",
     "prettier": "^2.7.1",

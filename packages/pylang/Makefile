@@ -5,18 +5,12 @@ all: build
 
 .PHONY: build
 build:
-	npm ci
+	npm install
 	npm run build
 
 .PHONY: test
-test:
+test: build
 	npm run test
-
-.PHONY: bench
-bench:
-	echo "STARTING pylang benchmark suite"
-	npx pylang `pwd`/bench/all.py
-	echo "FINISHED pylang benchmark suite"
 
 clean:
 	rm -rf ${DIST} node_modules

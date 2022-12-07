@@ -18,6 +18,7 @@ import {
 import Completer from "./completer";
 import { clearLine, createInterface } from "readline";
 import createCompiler from "./compiler";
+import { arch } from "os";
 
 const DEFAULT_HISTORY_SIZE = 1000;
 const HOME =
@@ -154,12 +155,15 @@ export default async function Repl(options0: Partial<Options>): Promise<void> {
   let toplevel;
   var importDirs = getImportDirs();
 
+  /*
+  Python 3.11.0 (main, Nov 29 2022, 20:26:05) [Clang 15.0.3 (git@github.com:ziglang/zig-bootstrap.git 0ce789d0f7a4d89fdc4d9571 on wasi
+  */
   if (process.stdin.isTTY) {
     options.console.log(
       colorize(
-        `Welcome to pylang.  Using Node.js ${
+        `Welcome to PyLang (${(new Date()).toLocaleString()}) [Node.js ${
           process.version
-        }.  ${
+        } on ${arch()}].  ${
           options.jsage ? "\nType dir(jsage) for available functions." : ""
         }`,
         "green",

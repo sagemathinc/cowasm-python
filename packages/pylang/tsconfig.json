@@ -19,7 +19,7 @@
     "rootDir": "./",
     "outDir": "dist"
   },
-  "exclude": ["node_modules", "dev", "dist", "release"],
+  "exclude": ["node_modules", "dist"],
   "watchOptions": {
     "watchFile": "useFsEvents",
     "watchDirectory": "useFsEvents",

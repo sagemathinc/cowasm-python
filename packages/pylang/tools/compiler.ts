@@ -11,7 +11,7 @@
 import { join, relative } from "path";
 import { readFileSync as readfile, writeFileSync as writefile } from "fs";
 import { createContext, runInContext } from "vm";
-import { pathExists, sha1sum } from "./utils";
+import { sha1sum } from "./utils";
 
 export type Compiler = any; // for now
 
@@ -31,10 +31,7 @@ export default function createCompiler(options: Options = {}): Compiler {
   });
 
   const base = join(__dirname, "..", "..");
-  let compiler_dir = join(base, "dev");
-  if (!pathExists(join(compiler_dir, "compiler.js"))) {
-    compiler_dir = join(base, "release");
-  }
+  let compiler_dir = join(base, "dist/compiler");
   const compiler_file = join(compiler_dir, "compiler.js");
   const compilerjs = readfile(compiler_file, "utf-8");
   runInContext(compilerjs, compiler_context, relative(base, compiler_file));

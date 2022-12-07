@@ -117,7 +117,7 @@ function compile(src_path, lib_path, sources, source_hash, profile) {
   var PyLang = createCompiler();
   var output_options, profiler, cpu_profile;
   var compiled_baselib = compile_baselib(PyLang, src_path);
-  var out_path = path.join(path.dirname(lib_path), "dev");
+  var out_path = lib_path;
   try {
     fs.mkdirSync(out_path);
   } catch (e) {
@@ -169,7 +169,7 @@ function compile(src_path, lib_path, sources, source_hash, profile) {
 }
 
 function run_single_compile(base_path, src_path, lib_path, profile) {
-  var out_path = path.join(path.dirname(lib_path), "dev");
+  var out_path = lib_path;
   var signatures = path.join(out_path, "signatures.json");
   var temp = check_for_changes(base_path, src_path, signatures);
   var source_hash = temp[0],
@@ -194,6 +194,6 @@ module.exports = function compile_self(
   var changed;
   do {
     changed = run_single_compile(base_path, src_path, lib_path, profile);
-    lib_path = path.join(path.dirname(lib_path), "dev");
+    lib_path = lib_path;
   } while (changed && complete);
 };
