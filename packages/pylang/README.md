@@ -1,8 +1,8 @@
 # pylang
 
-Lightweight implementation of the Python language in Javascript for use in node and the browser.
+Lightweight implementation of the Python language in Javascript for use in node and the browser. No dependence on CPython.
 
-**Less than 200KB compressed!**
+**A few hundred killobytes compressed!**
 
 https://github.com/sagemathinc/cowasm-python/tree/main/packages/pylang
 
@@ -41,7 +41,7 @@ Some goals:
 
 ## Benchmarks
 
-The directory bench/ has a collection of microbenchmarks which all run in Python3, pypy3, and pylang, so they are useful for comparing the performance of different Python implementations. These range from pystones to tests from mypy, computer language shootout, etc. and many others I found or made. Here's what the numbers are as of Nov 2021. Nothing is run in parallel, and in each case this is result of running `[pypy3|python3|pylang] all.py` in the bench directory. The timings hardly change if you rerun the benchmarks. We do not make any attempt to compensate for the JIT (e.g., by running a benchmark multiple times and taking the best result) -- we just run all the benchmarks one by one and add up the times.
+The directory ../bench/ has a collection of microbenchmarks which all run in Python3, pypy3, and pylang, so they are useful for comparing the performance of different Python implementations. These range from pystones to tests from mypy, computer language shootout, etc. and many others I found or made. Here's what the numbers are as of Nov 2021. Nothing is run in parallel, and in each case this is result of running `[pypy3|python3|pylang] all.py` in the bench directory. The timings hardly change if you rerun the benchmarks. We do not make any attempt to compensate for the JIT (e.g., by running a benchmark multiple times and taking the best result) -- we just run all the benchmarks one by one and add up the times.
 
 ### x86_64 ([cocalc.com](http://cocalc.com)) Ubuntu 20.04 Linux
 
@@ -99,4 +99,3 @@ print(2^3)
 $ npx pylang a.py
 8
 ```
-

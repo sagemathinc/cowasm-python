@@ -2,10 +2,13 @@
 from typing import Callable
 
 
-def time(f: Callable, *args) -> int:
+def time(name: str, f: Callable, *args) -> int:
     from time import time as time0
     t = time0()
-    f(*args)
+    try:
+        f(*args)
+    except:
+        print("\n**WARNING: there was an error running", name, "**\n")
     return int((time0() - t) * 1000)
 
 
@@ -26,7 +29,7 @@ def all(desc: str = '') -> None:
     print("Running...", desc)
     t = 0
     for (name, f) in benchmarks:
-        s = time(f)
+        s = time(name, f)
         t += s
         print(name, s, "ms")
     print("Total: ", t, "ms")
