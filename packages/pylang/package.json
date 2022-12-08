@@ -1,7 +1,7 @@
 {
   "name": "pylang",
-  "version": "1.1.3",
-  "description": "PyLang -- lightweight implementation of the Python language in Javascript for use in node and the browser.",
+  "version": "1.1.4",
+  "description": "PyLang -- lightweight implementation of a Python-like language in Javascript for use in node and the browser.",
   "homepage": "https://github.com/sagemathinc/cowasm-python/tree/main/packages/pylang#readme",
   "keywords": ["javascript", "python", "language", "compiler"],
   "main": "tools/compiler.js",

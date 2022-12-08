@@ -1,6 +1,6 @@
 # pylang
 
-Lightweight implementation of the Python language in Javascript for use in node and the browser. No dependence on CPython.
+Lightweight implementation of a Python-like language in Javascript for use in node and the browser. No dependence on CPython.
 
 **A few hundred killobytes compressed!**
 
@@ -24,7 +24,7 @@ Welcome to PyLang (12/6/2022, 11:53:14 PM) [Node.js v16.16.0 on arm64].
 Wall time: 97ms
 ```
 
-## A Python _language_ implementation in Javascript
+## A Python\-like _language_ implementation in Javascript
 
 **History:** This is **based on** [RapydScript\-ng](https://github.com/kovidgoyal/rapydscript-ng), but with many months
 of additional work, and very different design goals. RapydScript tried
@@ -101,3 +101,7 @@ print(2^3)
 $ npx pylang a.py
 8
 ```
+
+## "Python-like"
+
+I noticed [the Hacker news discussion of Codon](https://news.ycombinator.com/item?id=33908576), and people felt strongly that it should describe itself as "Python-like" rather than "Python". Their argument for doing so is compelling, so I've done the same here.
